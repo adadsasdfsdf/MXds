@@ -7,7 +7,8 @@ import { formatMXN, ivaIncluido } from "@/lib/mexico";
 import { useCarrito } from "@/context/CarritoContext";
 import Estrellas from "@/components/Estrellas";
 
-const IMG_FALLBACK = "https://loremflickr.com/800/800/mexican,craft";
+const IMG_FALLBACK =
+  "https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=800&q=80";
 
 export default function DetalleProducto({
   producto,
