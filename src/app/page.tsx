@@ -22,7 +22,7 @@ export default async function HomePage() {
             en TODA la tienda · ¡Paga solo el 85%!
           </p>
           <Link
-            href="/categoria/artesanias"
+            href="/ofertas"
             className="rounded-full bg-amber-300 px-5 py-1.5 text-sm font-bold text-mexico-red transition-transform hover:scale-105"
           >
             ¡Comprar ahora!
@@ -63,7 +63,7 @@ export default async function HomePage() {
                 Explorar productos
               </Link>
               <Link
-                href="#destacados"
+                href="/ofertas"
                 className="rounded-lg border-2 border-white px-6 py-3 font-semibold text-white transition-colors hover:bg-white/10"
               >
                 Ver ofertas 🔥
@@ -113,7 +113,7 @@ export default async function HomePage() {
             </p>
           </div>
           <Link
-            href="#destacados"
+            href="/ofertas"
             className="whitespace-nowrap rounded-lg bg-mexico-green px-6 py-3 font-semibold text-white shadow transition-transform hover:scale-105"
           >
             Ver ofertas
