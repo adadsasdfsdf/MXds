@@ -66,11 +66,6 @@ export const METODOS_PAGO = [
     descripcion: "Visa, Mastercard, American Express",
   },
   {
-    id: "oxxo",
-    nombre: "Pago en efectivo (OXXO)",
-    descripcion: "Paga en tu tienda OXXO más cercana",
-  },
-  {
     id: "spei",
     nombre: "Transferencia SPEI",
     descripcion: "Transferencia bancaria interbancaria",

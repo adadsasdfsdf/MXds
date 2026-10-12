@@ -5,6 +5,7 @@ import { CarritoProvider } from "@/context/CarritoContext";
 import { AuthProvider } from "@/context/AuthContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ChatSoporte from "@/components/ChatSoporte";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -14,13 +15,13 @@ export const metadata: Metadata = {
     template: "%s · Mexlindo",
   },
   description:
-    "Mexlindo: tienda en línea de productos mexicanos auténticos — artesanías, ropa, alimentos y más. Envíos a toda la República. Pago con tarjeta, OXXO y SPEI.",
+    "Mexlindo: tienda en línea de productos mexicanos auténticos — artesanías, ropa, alimentos y más. Envíos a toda la República. Pago con tarjeta, SPEI y Mercado Pago.",
   keywords: [
     "Mexlindo",
     "tienda mexicana",
     "artesanías",
     "productos mexicanos",
-    "OXXO",
+    "SPEI",
     "MXN",
   ],
 };
@@ -38,6 +39,7 @@ export default function RootLayout({
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
+            <ChatSoporte />
           </CarritoProvider>
         </AuthProvider>
       </body>

@@ -8,7 +8,20 @@ const updateSchema = z.object({
   precio: z.number().positive().optional(),
   precioAnterior: z.number().positive().nullable().optional(),
   categoria: z
-    .enum(["artesanias", "ropa", "alimentos", "hogar", "belleza"])
+    .enum([
+      "artesanias",
+      "ropa",
+      "alimentos",
+      "bebidas",
+      "hogar",
+      "belleza",
+      "joyeria",
+      "juguetes",
+      "libros",
+      "deportes",
+      "mascotas",
+      "electronica",
+    ])
     .optional(),
   imagen: z.string().url().optional(),
   stock: z.number().int().nonnegative().optional(),

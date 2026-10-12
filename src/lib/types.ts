@@ -19,7 +19,18 @@ export interface Producto {
 }
 
 export type Categoria =
-  "artesanias" | "ropa" | "alimentos" | "hogar" | "belleza";
+  | "artesanias"
+  | "ropa"
+  | "alimentos"
+  | "hogar"
+  | "belleza"
+  | "joyeria"
+  | "juguetes"
+  | "bebidas"
+  | "libros"
+  | "mascotas"
+  | "electronica"
+  | "deportes";
 
 export interface CategoriaInfo {
   id: Categoria;

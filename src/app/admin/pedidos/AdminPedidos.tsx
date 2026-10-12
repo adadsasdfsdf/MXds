@@ -19,7 +19,6 @@ interface PedidoAdmin {
 
 const METODO: Record<string, string> = {
   tarjeta: "Tarjeta",
-  oxxo: "OXXO",
   spei: "SPEI",
   mercadopago: "Mercado Pago",
 };

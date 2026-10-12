@@ -3,8 +3,8 @@
  *  - MOCK (MP_MOCK=true): simula el pago sin cobrar, útil para desarrollo/demo.
  *  - Mercado Pago real: crea una preferencia de pago vía su API REST.
  *
- * Mercado Pago es la pasarela más usada en México e incluye tarjeta, OXXO
- * (efectivo), SPEI y meses sin intereses.
+ * Mercado Pago es la pasarela más usada en México e incluye tarjeta,
+ * SPEI y meses sin intereses.
  */
 
 export interface DatosPago {
@@ -29,11 +29,6 @@ const esMock = process.env.MP_MOCK !== "false";
 function referenciaSimulada(metodo: string): string {
   const rand = Math.random().toString(36).slice(2, 10).toUpperCase();
   switch (metodo) {
-    case "oxxo":
-      // Las fichas OXXO son numéricas de 14 dígitos.
-      return Array.from({ length: 14 }, () =>
-        Math.floor(Math.random() * 10),
-      ).join("");
     case "spei":
       return `CLABE-${rand}`;
     default:
@@ -44,10 +39,9 @@ function referenciaSimulada(metodo: string): string {
 export async function procesarPago(datos: DatosPago): Promise<ResultadoPago> {
   if (esMock) {
     // Modo simulado: tarjeta/mercadopago se aprueban al instante;
-    // oxxo/spei quedan "pendientes" (como pasaría en la vida real
-    // hasta que el cliente paga en la tienda o hace la transferencia).
-    const pendiente =
-      datos.metodoPago === "oxxo" || datos.metodoPago === "spei";
+    // spei queda "pendiente" (como pasaría en la vida real hasta que el
+    // cliente hace la transferencia).
+    const pendiente = datos.metodoPago === "spei";
     return {
       urlPago: null,
       referencia: referenciaSimulada(datos.metodoPago),
