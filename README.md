@@ -44,9 +44,11 @@ Tienda en línea **full-stack** para el mercado mexicano, construida con **Next.
 - **IVA 16%** incluido y desglosado
 - Métodos de pago locales, facturación **CFDI**, 32 estados, validación de CP
 
-## 🚀 Puesta en marcha
+## 🚀 Puesta en marcha (local)
 
-> Requiere Node.js 18+ y acceso a internet para `npm install`.
+> Requiere Node.js 18+ y una base de datos PostgreSQL.
+> Para desarrollo local puedes crear un Postgres gratuito en
+> [Neon](https://neon.tech) o [Supabase](https://supabase.com) en 2 minutos.
 
 ```bash
 # 1. Instalar dependencias
@@ -54,6 +56,7 @@ npm install
 
 # 2. Configurar variables de entorno
 cp .env.example .env      # (en Windows: copy .env.example .env)
+#   -> edita .env y pega tu DATABASE_URL y DIRECT_URL de Postgres
 
 # 3. Crear la base de datos y sembrar datos de ejemplo
 npm run setup
@@ -65,6 +68,9 @@ npm run dev
 ```
 
 Abre **http://localhost:3000** 🎉
+
+> 🌐 **¿Quieres una URL pública?** Mira **[DEPLOY.md](./DEPLOY.md)** para publicar
+> en Vercel con base de datos en la nube (gratis).
 
 ### 👤 Cuentas de prueba (creadas por el seed)
 
