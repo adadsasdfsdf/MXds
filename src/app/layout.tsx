@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { CarritoProvider } from "@/context/CarritoContext";
+import { AuthProvider } from "@/context/AuthContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -28,11 +29,13 @@ export default function RootLayout({
   return (
     <html lang="es-MX" className={inter.variable}>
       <body className="flex min-h-screen flex-col font-sans antialiased">
-        <CarritoProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </CarritoProvider>
+        <AuthProvider>
+          <CarritoProvider>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </CarritoProvider>
+        </AuthProvider>
       </body>
     </html>
   );

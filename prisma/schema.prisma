@@ -1,0 +1,90 @@
+// Esquema de la base de datos (Prisma + SQLite)
+// Para producción se puede cambiar el provider a "postgresql".
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Usuario {
+  id        String   @id @default(cuid())
+  nombre    String
+  email     String   @unique
+  // Hash de la contraseña (bcrypt). Nunca se guarda en texto plano.
+  password  String
+  // Rol: "cliente" o "admin"
+  rol       String   @default("cliente")
+  pedidos   Pedido[]
+  creadoEn  DateTime @default(now())
+}
+
+model Producto {
+  id            String        @id @default(cuid())
+  slug          String        @unique
+  nombre        String
+  descripcion   String
+  // Precio en pesos mexicanos (IVA incluido), en centavos para evitar errores de redondeo.
+  precioCentavos Int
+  precioAnteriorCentavos Int?
+  categoria     String
+  imagen        String
+  stock         Int           @default(0)
+  origen        String?
+  destacado     Boolean       @default(false)
+  activo        Boolean       @default(true)
+  itemsPedido   ItemPedido[]
+  creadoEn      DateTime      @default(now())
+  actualizadoEn DateTime      @updatedAt
+}
+
+model Pedido {
+  id              String       @id @default(cuid())
+  // Número de pedido legible para el cliente, ej. "MX-00001"
+  numero          String       @unique
+  usuario         Usuario?     @relation(fields: [usuarioId], references: [id])
+  usuarioId       String?
+  // Datos de contacto y envío (snapshot al momento de la compra)
+  nombreCliente   String
+  email           String
+  telefono        String
+  calle           String
+  colonia         String?
+  codigoPostal    String
+  ciudad          String
+  estado          String
+  // Importe en centavos
+  subtotalCentavos Int
+  envioCentavos    Int
+  totalCentavos    Int
+  // Pago
+  metodoPago      String       // tarjeta | oxxo | spei | mercadopago
+  estadoPago      String       @default("pendiente") // pendiente | pagado | fallido
+  // Referencia externa de la pasarela (ej. OXXO voucher, id de Mercado Pago)
+  referenciaPago  String?
+  // Facturación CFDI (opcional)
+  requiereFactura Boolean      @default(false)
+  rfc             String?
+  razonSocial     String?
+  usoCfdi         String?
+  // Estado logístico
+  estado_envio    String       @default("procesando") // procesando | enviado | entregado | cancelado
+  items           ItemPedido[]
+  creadoEn        DateTime     @default(now())
+}
+
+model ItemPedido {
+  id             String   @id @default(cuid())
+  pedido         Pedido   @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  pedidoId       String
+  producto       Producto @relation(fields: [productoId], references: [id])
+  productoId     String
+  // Snapshot del producto al momento de la compra
+  nombre         String
+  precioCentavos Int
+  cantidad       Int
+}

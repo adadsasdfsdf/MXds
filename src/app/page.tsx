@@ -2,8 +2,8 @@ import Link from "next/link";
 import ProductoCard from "@/components/ProductoCard";
 import { CATEGORIAS, getProductosDestacados } from "@/lib/data";
 
-export default function HomePage() {
-  const destacados = getProductosDestacados();
+export default async function HomePage() {
+  const destacados = await getProductosDestacados();
 
   return (
     <>

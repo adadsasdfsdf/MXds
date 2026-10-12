@@ -2,11 +2,9 @@ import { notFound } from "next/navigation";
 import ProductoCard from "@/components/ProductoCard";
 import { CATEGORIAS, getProductosPorCategoria } from "@/lib/data";
 
-export function generateStaticParams() {
-  return CATEGORIAS.map((c) => ({ categoria: c.id }));
-}
+export const dynamic = "force-dynamic";
 
-export default function CategoriaPage({
+export default async function CategoriaPage({
   params,
 }: {
   params: { categoria: string };
@@ -16,7 +14,7 @@ export default function CategoriaPage({
     notFound();
   }
 
-  const productos = getProductosPorCategoria(params.categoria);
+  const productos = await getProductosPorCategoria(params.categoria);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10">

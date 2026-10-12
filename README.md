@@ -1,72 +1,145 @@
 # 🌵 TiendaMexicana
 
-Plantilla (scaffold) de tienda en línea para el **mercado mexicano**, construida con **Next.js 14 (App Router) + TypeScript + Tailwind CSS**.
+Tienda en línea **full-stack** para el mercado mexicano, construida con **Next.js 14 (App Router) + TypeScript + Tailwind CSS + Prisma**.
 
-> Es un punto de partida listo para extender con una base de datos, autenticación y pasarelas de pago reales.
+## ✨ Características
 
-## ✨ Características incluidas
+### 🛍️ Tienda
+- Página de inicio con hero, categorías y productos destacados
+- Páginas por categoría y detalle de producto
+- Carrito persistente (localStorage) con React Context
+- Checkout completo con dirección de envío y facturación CFDI
 
-- 🏠 **Página de inicio** con hero, categorías y productos destacados
-- 🗂️ **Páginas por categoría** (artesanías, ropa, alimentos, hogar, belleza)
-- 🛍️ **Página de detalle de producto** con selector de cantidad
-- 🛒 **Carrito de compras** persistente (localStorage) con React Context
-- 💳 **Checkout** con formulario de envío y métodos de pago locales
-- 🇲🇽 **Localización para México**:
-  - Moneda en **pesos mexicanos (MXN)** con formato `es-MX`
-  - **IVA 16%** incluido y desglosado
-  - Métodos de pago: **tarjeta, OXXO, SPEI, Mercado Pago**
-  - Envío gratis desde $999 MXN
-  - Catálogo de los **32 estados** de la República
-  - Validación de **código postal** (5 dígitos)
-  - Casilla de **facturación CFDI** (RFC, razón social, uso de CFDI)
-  - Interfaz 100% en **español**
+### 🗄️ Base de datos (Prisma + SQLite)
+- Productos, usuarios, pedidos e items persistidos en base de datos
+- Precios guardados en centavos (sin errores de redondeo)
+- Fácil de migrar a PostgreSQL (cambia el `provider` en `schema.prisma`)
 
-## 🚀 Puesta en marcha
+### 🔐 Usuarios y autenticación
+- Registro e inicio de sesión (JWT en cookie httpOnly, contraseñas con bcrypt)
+- Historial de pedidos en "Mi cuenta"
+- Roles: `cliente` y `admin`
+- Compra como invitado o con cuenta
 
-> Requiere acceso a internet para instalar dependencias (`npm install`).
+### 💳 Pagos (Mercado Pago)
+- Integración con **Mercado Pago** (tarjeta, OXXO, SPEI, meses sin intereses)
+- **Modo simulado** por defecto (`MP_MOCK=true`) para probar sin cobros reales
+- Webhook para confirmar pagos reales
+- OXXO/SPEI generan referencia y quedan "pendientes" hasta confirmarse
+
+### 📦 Pedidos
+- Creación de pedidos con validación de stock y recálculo de precios en el servidor
+- Descuento de inventario transaccional
+- Números de pedido legibles (MX-00001)
+- Página de confirmación con instrucciones de pago (ficha OXXO, referencia SPEI)
+
+### ⚙️ Panel de administración (`/admin`)
+- Protegido por middleware (solo rol `admin`)
+- Resumen con métricas (ventas, pedidos, stock bajo)
+- CRUD de productos (crear, editar, activar/desactivar)
+- Gestión de pedidos (actualizar estado de pago y de envío)
+
+### 🇲🇽 Localización para México
+- Moneda en **pesos mexicanos (MXN)** con formato `es-MX`
+- **IVA 16%** incluido y desglosado
+- Métodos de pago locales, facturación **CFDI**, 32 estados, validación de CP
+
+## 🚀 Puesta en marcha (local)
+
+> Requiere Node.js 18+ y una base de datos PostgreSQL.
+> Para desarrollo local puedes crear un Postgres gratuito en
+> [Neon](https://neon.tech) o [Supabase](https://supabase.com) en 2 minutos.
 
 ```bash
-npm install        # instalar dependencias
-npm run dev        # servidor de desarrollo en http://localhost:3000
-npm run build      # compilar para producción
-npm run start      # ejecutar la build de producción
-npm run lint       # linting
-npm run typecheck  # verificación de tipos (tsc)
+# 1. Instalar dependencias
+npm install
+
+# 2. Configurar variables de entorno
+cp .env.example .env      # (en Windows: copy .env.example .env)
+#   -> edita .env y pega tu DATABASE_URL y DIRECT_URL de Postgres
+
+# 3. Crear la base de datos y sembrar datos de ejemplo
+npm run setup
+#   -> genera el cliente de Prisma, crea las tablas y siembra
+#      productos + usuarios de prueba
+
+# 4. Iniciar el servidor de desarrollo
+npm run dev
 ```
 
-## 📁 Estructura del proyecto
+Abre **http://localhost:3000** 🎉
+
+> 🌐 **¿Quieres una URL pública?** Mira **[DEPLOY.md](./DEPLOY.md)** para publicar
+> en Vercel con base de datos en la nube (gratis).
+
+### 👤 Cuentas de prueba (creadas por el seed)
+
+| Rol     | Correo                      | Contraseña  |
+|---------|-----------------------------|-------------|
+| Admin   | admin@tiendamexicana.mx     | admin123    |
+| Cliente | cliente@ejemplo.mx          | cliente123  |
+
+> El panel de administración está en **http://localhost:3000/admin** (inicia sesión como admin).
+
+## 📜 Scripts
+
+| Script              | Qué hace                                            |
+|---------------------|-----------------------------------------------------|
+| `npm run dev`       | Servidor de desarrollo                              |
+| `npm run build`     | Compila para producción (genera Prisma + build)     |
+| `npm run start`     | Ejecuta la build de producción                      |
+| `npm run setup`     | Genera cliente + crea tablas + siembra datos        |
+| `npm run db:seed`   | Siembra datos de ejemplo                            |
+| `npm run db:reset`  | Reinicia la base de datos y vuelve a sembrar        |
+| `npm run typecheck` | Verificación de tipos                               |
+
+## 💳 Activar pagos reales con Mercado Pago
+
+1. Crea una cuenta en [Mercado Pago Developers](https://www.mercadopago.com.mx/developers)
+2. Obtén tu **Access Token** de producción
+3. En `.env`:
+   ```
+   MP_MOCK="false"
+   MP_ACCESS_TOKEN="tu-access-token"
+   NEXT_PUBLIC_SITE_URL="https://tu-dominio.com"
+   ```
+4. Configura el webhook en Mercado Pago apuntando a `https://tu-dominio.com/api/pagos/webhook`
+
+## 📁 Estructura
 
 ```
+prisma/
+├── schema.prisma           # Modelos: Usuario, Producto, Pedido, ItemPedido
+└── seed.ts                 # Datos de ejemplo
 src/
-├── app/                      # Rutas (App Router)
-│   ├── layout.tsx            # Layout raíz (Header, Footer, CarritoProvider)
-│   ├── page.tsx              # Página de inicio
-│   ├── globals.css           # Estilos globales + Tailwind
-│   ├── not-found.tsx         # Página 404
-│   ├── categoria/[categoria] # Listado por categoría
-│   ├── producto/[slug]       # Detalle de producto
-│   ├── carrito/              # Carrito de compras
-│   └── checkout/             # Finalizar compra
-├── components/               # Header, Footer, ProductoCard
-├── context/                  # CarritoContext (estado del carrito)
+├── middleware.ts           # Protección de rutas /admin
+├── app/
+│   ├── (tienda)            # inicio, categoría, producto, carrito, checkout
+│   ├── pedido/[numero]     # Confirmación de pedido
+│   ├── login, registro     # Autenticación
+│   ├── mi-cuenta           # Historial de pedidos
+│   ├── admin/              # Panel: resumen, productos, pedidos
+│   └── api/
+│       ├── auth/           # login, registro, logout, sesión
+│       ├── pedidos/        # Crear pedido
+│       ├── pagos/webhook   # Webhook de Mercado Pago
+│       └── admin/          # CRUD productos, gestión de pedidos
+├── components/             # Header, Footer, ProductoCard
+├── context/                # CarritoContext, AuthContext
 └── lib/
-    ├── data.ts               # Catálogo de ejemplo (mock)
-    ├── types.ts              # Tipos de dominio
-    └── mexico.ts             # Utilidades: MXN, IVA, envío, estados, CP
+    ├── prisma.ts           # Cliente Prisma (singleton)
+    ├── auth.ts             # JWT + cookies de sesión
+    ├── data.ts             # Consultas de productos
+    ├── pedidos.ts          # Lógica de creación de pedidos
+    ├── pago.ts             # Capa de pago (mock / Mercado Pago)
+    ├── mexico.ts           # Utilidades: MXN, IVA, envío, estados, CP
+    └── types.ts            # Tipos de dominio
 ```
 
-## 🔜 Próximos pasos sugeridos
+## 🔜 Siguientes pasos para producción
 
-Este scaffold usa **datos de ejemplo** y un checkout **simulado**. Para llevarlo a producción:
-
-1. **Base de datos**: reemplazar `src/lib/data.ts` por una BD real (PostgreSQL + Prisma, o un headless commerce como [Medusa](https://medusajs.com/)).
-2. **Pasarela de pago**: integrar [Mercado Pago](https://www.mercadopago.com.mx/developers), [Stripe](https://stripe.com/mx) o [Conekta](https://conekta.com/) (incluye OXXO y SPEI).
-3. **Autenticación**: cuentas de usuario e historial de pedidos (NextAuth.js / Clerk).
-4. **Facturación CFDI**: conectar con un PAC autorizado por el SAT para timbrar facturas.
-5. **Envíos**: cotización y guías con Estafeta, DHL o un agregador (Skydropx, Envia.com).
-6. **Panel de administración**: gestión de productos, inventario y pedidos.
-
-## 📝 Notas
-
-- Las imágenes de ejemplo provienen de Unsplash (configurado en `next.config.mjs`).
-- Los precios ya incluyen IVA; el checkout es una demostración y **no procesa cobros reales**.
+- Migrar SQLite → PostgreSQL (`provider = "postgresql"` + hosting como Supabase/Neon)
+- Facturación CFDI real conectando un PAC autorizado por el SAT
+- Cotización de envíos con Estafeta/DHL o un agregador (Skydropx, Envia.com)
+- Subida de imágenes de productos (en vez de URLs) con un storage (S3, Cloudinary)
+- Rate limiting y verificación de correo
