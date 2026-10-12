@@ -9,10 +9,14 @@ import Footer from "@/components/Footer";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "TiendaMexicana · Productos auténticos de México",
+  title: {
+    default: "Mexlindo · Lo lindo de México, en tu puerta",
+    template: "%s · Mexlindo",
+  },
   description:
-    "Tienda en línea de productos mexicanos: artesanías, ropa, alimentos y más. Envíos a toda la República. Pago con tarjeta, OXXO y SPEI.",
+    "Mexlindo: tienda en línea de productos mexicanos auténticos — artesanías, ropa, alimentos y más. Envíos a toda la República. Pago con tarjeta, OXXO y SPEI.",
   keywords: [
+    "Mexlindo",
     "tienda mexicana",
     "artesanías",
     "productos mexicanos",

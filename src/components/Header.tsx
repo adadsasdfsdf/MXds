@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useCarrito } from "@/context/CarritoContext";
 import { useAuth } from "@/context/AuthContext";
 import { CATEGORIAS } from "@/lib/data";
+import { Logo } from "@/components/Logo";
 
 export default function Header() {
   const { totalItems } = useCarrito();
@@ -25,17 +26,14 @@ export default function Header() {
       {/* Barra superior con mensaje de envío */}
       <div className="bg-mexico-green text-center text-sm text-white">
         <p className="py-1.5">
-          🚚 Envío gratis en compras mayores a $999 MXN · Pago en OXXO
-          disponible
+          🌵 Lo lindo de México, en tu puerta · Envío gratis desde $999 MXN ·
+          Pago en OXXO
         </p>
       </div>
 
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-2xl">🌵</span>
-          <span className="text-xl font-bold text-mexico-green">
-            Tienda<span className="text-mexico-red">Mexicana</span>
-          </span>
+        <Link href="/">
+          <Logo />
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">

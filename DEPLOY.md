@@ -40,7 +40,7 @@ accesible desde cualquier dispositivo.
 Agrega estas variables (**Environment Variables**):
 
 | Nombre                 | Valor                                                        |
-|------------------------|--------------------------------------------------------------|
+| ---------------------- | ------------------------------------------------------------ |
 | `DATABASE_URL`         | la connection string de Neon                                 |
 | `DIRECT_URL`           | la misma connection string de Neon                           |
 | `AUTH_SECRET`          | una cadena larga y aleatoria (invéntala, mín. 32 caracteres) |
@@ -72,6 +72,7 @@ https://tu-proyecto.vercel.app/api/seed?token=EL_SEED_TOKEN_QUE_PUSISTE
 Deberías ver un mensaje `"Sembrados 8 productos y 2 usuarios."`.
 
 Cuentas de prueba:
+
 - Admin: `admin@tiendamexicana.mx` / `admin123`
 - Cliente: `cliente@ejemplo.mx` / `cliente123`
 
@@ -82,6 +83,7 @@ Cuentas de prueba:
 ## Activar pagos reales (opcional)
 
 En **Settings → Environment Variables** de Vercel:
+
 - `MP_MOCK` = `false`
 - `MP_ACCESS_TOKEN` = tu Access Token de producción de Mercado Pago
 - Configura el webhook en Mercado Pago → `https://tu-proyecto.vercel.app/api/pagos/webhook`

@@ -1,45 +1,54 @@
-# 🌵 TiendaMexicana
+# 🌵 Mexlindo
+
+> **Lo lindo de México, en tu puerta.**
 
 Tienda en línea **full-stack** para el mercado mexicano, construida con **Next.js 14 (App Router) + TypeScript + Tailwind CSS + Prisma**.
 
 ## ✨ Características
 
 ### 🛍️ Tienda
+
 - Página de inicio con hero, categorías y productos destacados
 - Páginas por categoría y detalle de producto
 - Carrito persistente (localStorage) con React Context
 - Checkout completo con dirección de envío y facturación CFDI
 
 ### 🗄️ Base de datos (Prisma + SQLite)
+
 - Productos, usuarios, pedidos e items persistidos en base de datos
 - Precios guardados en centavos (sin errores de redondeo)
 - Fácil de migrar a PostgreSQL (cambia el `provider` en `schema.prisma`)
 
 ### 🔐 Usuarios y autenticación
+
 - Registro e inicio de sesión (JWT en cookie httpOnly, contraseñas con bcrypt)
 - Historial de pedidos en "Mi cuenta"
 - Roles: `cliente` y `admin`
 - Compra como invitado o con cuenta
 
 ### 💳 Pagos (Mercado Pago)
+
 - Integración con **Mercado Pago** (tarjeta, OXXO, SPEI, meses sin intereses)
 - **Modo simulado** por defecto (`MP_MOCK=true`) para probar sin cobros reales
 - Webhook para confirmar pagos reales
 - OXXO/SPEI generan referencia y quedan "pendientes" hasta confirmarse
 
 ### 📦 Pedidos
+
 - Creación de pedidos con validación de stock y recálculo de precios en el servidor
 - Descuento de inventario transaccional
 - Números de pedido legibles (MX-00001)
 - Página de confirmación con instrucciones de pago (ficha OXXO, referencia SPEI)
 
 ### ⚙️ Panel de administración (`/admin`)
+
 - Protegido por middleware (solo rol `admin`)
 - Resumen con métricas (ventas, pedidos, stock bajo)
 - CRUD de productos (crear, editar, activar/desactivar)
 - Gestión de pedidos (actualizar estado de pago y de envío)
 
 ### 🇲🇽 Localización para México
+
 - Moneda en **pesos mexicanos (MXN)** con formato `es-MX`
 - **IVA 16%** incluido y desglosado
 - Métodos de pago locales, facturación **CFDI**, 32 estados, validación de CP
@@ -74,24 +83,24 @@ Abre **http://localhost:3000** 🎉
 
 ### 👤 Cuentas de prueba (creadas por el seed)
 
-| Rol     | Correo                      | Contraseña  |
-|---------|-----------------------------|-------------|
-| Admin   | admin@tiendamexicana.mx     | admin123    |
-| Cliente | cliente@ejemplo.mx          | cliente123  |
+| Rol     | Correo                  | Contraseña |
+| ------- | ----------------------- | ---------- |
+| Admin   | admin@tiendamexicana.mx | admin123   |
+| Cliente | cliente@ejemplo.mx      | cliente123 |
 
 > El panel de administración está en **http://localhost:3000/admin** (inicia sesión como admin).
 
 ## 📜 Scripts
 
-| Script              | Qué hace                                            |
-|---------------------|-----------------------------------------------------|
-| `npm run dev`       | Servidor de desarrollo                              |
-| `npm run build`     | Compila para producción (genera Prisma + build)     |
-| `npm run start`     | Ejecuta la build de producción                      |
-| `npm run setup`     | Genera cliente + crea tablas + siembra datos        |
-| `npm run db:seed`   | Siembra datos de ejemplo                            |
-| `npm run db:reset`  | Reinicia la base de datos y vuelve a sembrar        |
-| `npm run typecheck` | Verificación de tipos                               |
+| Script              | Qué hace                                        |
+| ------------------- | ----------------------------------------------- |
+| `npm run dev`       | Servidor de desarrollo                          |
+| `npm run build`     | Compila para producción (genera Prisma + build) |
+| `npm run start`     | Ejecuta la build de producción                  |
+| `npm run setup`     | Genera cliente + crea tablas + siembra datos    |
+| `npm run db:seed`   | Siembra datos de ejemplo                        |
+| `npm run db:reset`  | Reinicia la base de datos y vuelve a sembrar    |
+| `npm run typecheck` | Verificación de tipos                           |
 
 ## 💳 Activar pagos reales con Mercado Pago
 
