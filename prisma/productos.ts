@@ -1,7 +1,13 @@
 /**
- * Catálogo de 100 productos de ejemplo para Mexlindo.
+ * Catálogo de productos de ejemplo para Mexlindo.
  * Precios en centavos (IVA incluido). Todos con precio anterior para mostrar
- * el descuento. Imágenes de Unsplash (uso libre).
+ * el descuento.
+ *
+ * Las imágenes usan Lorem Picsum con un "seed" único por producto
+ * (https://picsum.photos/seed/{seed}/800/800). Ventajas:
+ *  - No requiere API key ni caduca.
+ *  - Cada producto tiene una imagen distinta y estable (siempre la misma).
+ *  - Nunca aparecen imágenes rotas ni repetidas.
  *
  * Compartido por el seed de desarrollo (prisma/seed.ts) y el endpoint
  * /api/seed usado tras el despliegue.
@@ -20,11 +26,40 @@ export interface SeedProducto {
   destacado: boolean;
 }
 
-const img = (id: string) =>
-  `https://images.unsplash.com/${id}?w=800&q=80&auto=format&fit=crop`;
+/** Imagen estable y única por producto, basada en su slug. */
+const img = (seed: string) =>
+  `https://picsum.photos/seed/mexlindo-${seed}/800/800`;
 
-export const PRODUCTOS_SEED: SeedProducto[] = [
-  // ===================== ARTESANÍAS (12) =====================
+interface Entrada {
+  slug: string;
+  nombre: string;
+  descripcion: string;
+  precioCentavos: number;
+  precioAnteriorCentavos: number;
+  categoria: string;
+  stock: number;
+  origen: string;
+  destacado?: boolean;
+}
+
+/** Construye un SeedProducto a partir de una entrada compacta. */
+function p(e: Entrada): SeedProducto {
+  return {
+    slug: e.slug,
+    nombre: e.nombre,
+    descripcion: e.descripcion,
+    precioCentavos: e.precioCentavos,
+    precioAnteriorCentavos: e.precioAnteriorCentavos,
+    categoria: e.categoria,
+    imagen: img(e.slug),
+    stock: e.stock,
+    origen: e.origen,
+    destacado: e.destacado ?? false,
+  };
+}
+
+const ENTRADAS: Entrada[] = [
+  // ===================== ARTESANÍAS =====================
   {
     slug: "alebrije-oaxaqueno",
     nombre: "Alebrije Oaxaqueño",
@@ -33,7 +68,6 @@ export const PRODUCTOS_SEED: SeedProducto[] = [
     precioCentavos: 129900,
     precioAnteriorCentavos: 159900,
     categoria: "artesanias",
-    imagen: img("photo-1596463059283-da257325bab8"),
     stock: 12,
     origen: "Oaxaca",
     destacado: true,
@@ -46,7 +80,6 @@ export const PRODUCTOS_SEED: SeedProducto[] = [
     precioCentavos: 74900,
     precioAnteriorCentavos: 89900,
     categoria: "artesanias",
-    imagen: img("photo-1578749556568-bc2c40e68b61"),
     stock: 20,
     origen: "Puebla",
     destacado: true,
@@ -59,10 +92,8 @@ export const PRODUCTOS_SEED: SeedProducto[] = [
     precioCentavos: 189900,
     precioAnteriorCentavos: 229900,
     categoria: "artesanias",
-    imagen: img("photo-1610701596007-11502861dcfa"),
     stock: 6,
     origen: "Estado de México",
-    destacado: false,
   },
   {
     slug: "catrina-ceramica",
@@ -72,7 +103,6 @@ export const PRODUCTOS_SEED: SeedProducto[] = [
     precioCentavos: 64900,
     precioAnteriorCentavos: 79900,
     categoria: "artesanias",
-    imagen: img("photo-1509670572d7b"),
     stock: 18,
     origen: "Michoacán",
     destacado: true,
@@ -85,10 +115,8 @@ export const PRODUCTOS_SEED: SeedProducto[] = [
     precioCentavos: 99900,
     precioAnteriorCentavos: 119900,
     categoria: "artesanias",
-    imagen: img("photo-1565193566173-7a0ee3dbe261"),
     stock: 10,
     origen: "Guerrero",
-    destacado: false,
   },
   {
     slug: "ojo-de-dios",
@@ -98,10 +126,8 @@ export const PRODUCTOS_SEED: SeedProducto[] = [
     precioCentavos: 34900,
     precioAnteriorCentavos: 44900,
     categoria: "artesanias",
-    imagen: img("photo-1513519245088-0e12902e35ca"),
     stock: 30,
     origen: "Nayarit",
-    destacado: false,
   },
   {
     slug: "barro-negro",
@@ -111,10 +137,8 @@ export const PRODUCTOS_SEED: SeedProducto[] = [
     precioCentavos: 84900,
     precioAnteriorCentavos: 99900,
     categoria: "artesanias",
-    imagen: img("photo-1565194481104-39d1ee1b8bcc"),
     stock: 15,
     origen: "Oaxaca",
-    destacado: false,
   },
   {
     slug: "cuadro-estambre-huichol",
@@ -124,23 +148,20 @@ export const PRODUCTOS_SEED: SeedProducto[] = [
     precioCentavos: 149900,
     precioAnteriorCentavos: 179900,
     categoria: "artesanias",
-    imagen: img("photo-1578321272176-b7bbc0679853"),
     stock: 8,
     origen: "Jalisco",
     destacado: true,
   },
   {
-    slug: "piñata-tradicional",
+    slug: "pinata-tradicional",
     nombre: "Piñata Tradicional de Picos",
     descripcion:
       "Piñata de siete picos hecha con papel de china, la clásica de las posadas.",
     precioCentavos: 29900,
     precioAnteriorCentavos: 39900,
     categoria: "artesanias",
-    imagen: img("photo-1562599838-8cc871c241a5"),
     stock: 40,
     origen: "Ciudad de México",
-    destacado: false,
   },
   {
     slug: "molcajete-piedra",
@@ -150,10 +171,8 @@ export const PRODUCTOS_SEED: SeedProducto[] = [
     precioCentavos: 54900,
     precioAnteriorCentavos: 69900,
     categoria: "artesanias",
-    imagen: img("photo-1599360889420-da1afaba9edc"),
     stock: 25,
     origen: "Jalisco",
-    destacado: false,
   },
   {
     slug: "cruz-ocotlan",
@@ -163,10 +182,8 @@ export const PRODUCTOS_SEED: SeedProducto[] = [
     precioCentavos: 44900,
     precioAnteriorCentavos: 54900,
     categoria: "artesanias",
-    imagen: img("photo-1519681393784-d120267933ba"),
     stock: 22,
     origen: "Oaxaca",
-    destacado: false,
   },
   {
     slug: "nacimiento-barro",
@@ -176,17 +193,11 @@ export const PRODUCTOS_SEED: SeedProducto[] = [
     precioCentavos: 119900,
     precioAnteriorCentavos: 149900,
     categoria: "artesanias",
-    imagen: img("photo-1543258103-a62bdc069871"),
     stock: 14,
     origen: "Puebla",
-    destacado: false,
   },
-];
 
-// 把写错的图片 id 修正（见más abajo se normalizan todas con fallback）
-
-export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
-  // ===================== ROPA (10) =====================
+  // ===================== ROPA =====================
   {
     slug: "huipil-bordado",
     nombre: "Huipil Bordado a Mano",
@@ -195,7 +206,6 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 89000,
     precioAnteriorCentavos: 109000,
     categoria: "ropa",
-    imagen: img("photo-1591047139829-d91aecb6caea"),
     stock: 8,
     origen: "Chiapas",
     destacado: true,
@@ -208,7 +218,6 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 115000,
     precioAnteriorCentavos: 139000,
     categoria: "ropa",
-    imagen: img("photo-1544441893-675973e31985"),
     stock: 15,
     origen: "Coahuila",
     destacado: true,
@@ -221,10 +230,8 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 179900,
     precioAnteriorCentavos: 219900,
     categoria: "ropa",
-    imagen: img("photo-1434389677669-e08b4cac3105"),
     stock: 10,
     origen: "Estado de México",
-    destacado: false,
   },
   {
     slug: "guayabera-lino",
@@ -234,10 +241,8 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 69900,
     precioAnteriorCentavos: 89900,
     categoria: "ropa",
-    imagen: img("photo-1596755094514-f87e34085b2c"),
     stock: 30,
     origen: "Yucatán",
-    destacado: false,
   },
   {
     slug: "vestido-bordado-oaxaca",
@@ -247,7 +252,6 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 129900,
     precioAnteriorCentavos: 159900,
     categoria: "ropa",
-    imagen: img("photo-1572804013309-59a88b7e92f1"),
     stock: 12,
     origen: "Oaxaca",
     destacado: true,
@@ -260,10 +264,8 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 99900,
     precioAnteriorCentavos: 124900,
     categoria: "ropa",
-    imagen: img("photo-1520975661595-6453be3f7070"),
     stock: 18,
     origen: "Michoacán",
-    destacado: false,
   },
   {
     slug: "huaraches-piel",
@@ -273,10 +275,8 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 59900,
     precioAnteriorCentavos: 74900,
     categoria: "ropa",
-    imagen: img("photo-1603487742131-4160ec999306"),
     stock: 25,
     origen: "Jalisco",
-    destacado: false,
   },
   {
     slug: "falda-folklorica",
@@ -286,10 +286,8 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 84900,
     precioAnteriorCentavos: 104900,
     categoria: "ropa",
-    imagen: img("photo-1551232864-3f0890e580d9"),
     stock: 14,
     origen: "Jalisco",
-    destacado: false,
   },
   {
     slug: "camisa-manta",
@@ -298,26 +296,22 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 44900,
     precioAnteriorCentavos: 54900,
     categoria: "ropa",
-    imagen: img("photo-1562157873-818bc0726f68"),
     stock: 35,
     origen: "Veracruz",
-    destacado: false,
   },
   {
-    slug: "bolsa-tejida-palma",
+    slug: "bolsa-tejida-palma-ropa",
     nombre: "Bolsa Tejida de Palma",
     descripcion:
       "Bolsa de mano tejida en palma natural, perfecta para la playa.",
     precioCentavos: 39900,
     precioAnteriorCentavos: 49900,
     categoria: "ropa",
-    imagen: img("photo-1591561954557-26941169b49e"),
     stock: 40,
     origen: "Guerrero",
-    destacado: false,
   },
 
-  // ===================== ALIMENTOS (12) =====================
+  // ===================== ALIMENTOS =====================
   {
     slug: "salsa-macha-artesanal",
     nombre: "Salsa Macha Artesanal (250g)",
@@ -326,7 +320,6 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 14900,
     precioAnteriorCentavos: 18900,
     categoria: "alimentos",
-    imagen: img("photo-1613514785940-daed07799d9b"),
     stock: 50,
     origen: "Veracruz",
     destacado: true,
@@ -339,7 +332,6 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 19900,
     precioAnteriorCentavos: 24900,
     categoria: "alimentos",
-    imagen: img("photo-1565299624946-b28f40a0ca4b"),
     stock: 45,
     origen: "Puebla",
     destacado: true,
@@ -352,10 +344,8 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 12900,
     precioAnteriorCentavos: 16900,
     categoria: "alimentos",
-    imagen: img("photo-1583300694831-7bb25dc0a4bb"),
     stock: 60,
     origen: "Zacatecas",
-    destacado: false,
   },
   {
     slug: "miel-agave",
@@ -365,10 +355,8 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 13900,
     precioAnteriorCentavos: 17900,
     categoria: "alimentos",
-    imagen: img("photo-1558642891-54be180ea339"),
     stock: 70,
     origen: "Jalisco",
-    destacado: false,
   },
   {
     slug: "vainilla-papantla",
@@ -378,7 +366,6 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 24900,
     precioAnteriorCentavos: 29900,
     categoria: "alimentos",
-    imagen: img("photo-1611079830811-865ff6961ec0"),
     stock: 30,
     origen: "Veracruz",
     destacado: true,
@@ -390,10 +377,8 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 9900,
     precioAnteriorCentavos: 12900,
     categoria: "alimentos",
-    imagen: img("photo-1625938145312-c88c99b4faa5"),
     stock: 40,
     origen: "Oaxaca",
-    destacado: false,
   },
   {
     slug: "tamarindo-enchilado",
@@ -403,10 +388,8 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 7900,
     precioAnteriorCentavos: 9900,
     categoria: "alimentos",
-    imagen: img("photo-1600359756098-8bc52195bbf4"),
     stock: 80,
     origen: "Guerrero",
-    destacado: false,
   },
   {
     slug: "frijol-negro-organico",
@@ -415,10 +398,8 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 8900,
     precioAnteriorCentavos: 11900,
     categoria: "alimentos",
-    imagen: img("photo-1515543904379-3d757afe72e4"),
     stock: 55,
     origen: "Chiapas",
-    destacado: false,
   },
   {
     slug: "queso-cotija",
@@ -428,10 +409,8 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 15900,
     precioAnteriorCentavos: 19900,
     categoria: "alimentos",
-    imagen: img("photo-1486297678162-eb2a19b0a32d"),
     stock: 35,
     origen: "Michoacán",
-    destacado: false,
   },
   {
     slug: "cajeta-celaya",
@@ -441,10 +420,8 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 11900,
     precioAnteriorCentavos: 14900,
     categoria: "alimentos",
-    imagen: img("photo-1587049352846-4a222e784d38"),
     stock: 50,
     origen: "Guanajuato",
-    destacado: false,
   },
   {
     slug: "amaranto-barras",
@@ -454,10 +431,8 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 8900,
     precioAnteriorCentavos: 10900,
     categoria: "alimentos",
-    imagen: img("photo-1490567674331-72de84996201"),
     stock: 65,
     origen: "Morelos",
-    destacado: false,
   },
   {
     slug: "sal-gusano",
@@ -467,15 +442,13 @@ export const PRODUCTOS_ROPA_ALIMENTOS: SeedProducto[] = [
     precioCentavos: 10900,
     precioAnteriorCentavos: 13900,
     categoria: "alimentos",
-    imagen: img("photo-1518110925495-5fe2fda0442c"),
     stock: 40,
     origen: "Oaxaca",
-    destacado: false,
   },
 ];
 
-export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
-  // ===================== BEBIDAS (10) =====================
+ENTRADAS.push(
+  // ===================== BEBIDAS =====================
   {
     slug: "mezcal-espadin",
     nombre: "Mezcal Espadín Artesanal (750ml)",
@@ -484,7 +457,6 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 59900,
     precioAnteriorCentavos: 74900,
     categoria: "bebidas",
-    imagen: img("photo-1514218953589-2d7d37efd2dc"),
     stock: 24,
     origen: "Oaxaca",
     destacado: true,
@@ -497,7 +469,6 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 21900,
     precioAnteriorCentavos: 25900,
     categoria: "bebidas",
-    imagen: img("photo-1559056199-641a0ac8b55e"),
     stock: 40,
     origen: "Chiapas",
     destacado: true,
@@ -510,23 +481,20 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 74900,
     precioAnteriorCentavos: 94900,
     categoria: "bebidas",
-    imagen: img("photo-1516535794938-6063878f08cc"),
     stock: 20,
     origen: "Jalisco",
     destacado: true,
   },
   {
     slug: "chocolate-mesa",
-    nombre: "Chocolate de Mesa (table) (500g)",
+    nombre: "Chocolate de Mesa (500g)",
     descripcion:
       "Chocolate de mesa con canela y almendra para preparar chocolate caliente.",
     precioCentavos: 12900,
     precioAnteriorCentavos: 15900,
     categoria: "bebidas",
-    imagen: img("photo-1511381939415-e44015466834"),
     stock: 50,
     origen: "Oaxaca",
-    destacado: false,
   },
   {
     slug: "agua-jamaica-concentrado",
@@ -535,10 +503,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 8900,
     precioAnteriorCentavos: 11900,
     categoria: "bebidas",
-    imagen: img("photo-1621263764928-df1444c5e859"),
     stock: 45,
     origen: "Guerrero",
-    destacado: false,
   },
   {
     slug: "pulque-curado",
@@ -547,10 +513,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 9900,
     precioAnteriorCentavos: 12900,
     categoria: "bebidas",
-    imagen: img("photo-1536935338788-846bb9981813"),
     stock: 18,
     origen: "Hidalgo",
-    destacado: false,
   },
   {
     slug: "cacao-polvo",
@@ -559,10 +523,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 13900,
     precioAnteriorCentavos: 16900,
     categoria: "bebidas",
-    imagen: img("photo-1606312619070-d48b4c652a52"),
     stock: 38,
     origen: "Tabasco",
-    destacado: false,
   },
   {
     slug: "cerveza-artesanal-6pack",
@@ -572,10 +534,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 24900,
     precioAnteriorCentavos: 29900,
     categoria: "bebidas",
-    imagen: img("photo-1535958636474-b021ee887b13"),
     stock: 30,
     origen: "Baja California",
-    destacado: false,
   },
   {
     slug: "horchata-concentrado",
@@ -585,10 +545,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 7900,
     precioAnteriorCentavos: 9900,
     categoria: "bebidas",
-    imagen: img("photo-1626201850129-a96cf1be1456"),
     stock: 42,
     origen: "Jalisco",
-    destacado: false,
   },
   {
     slug: "cafe-veracruz-molido",
@@ -597,13 +555,11 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 11900,
     precioAnteriorCentavos: 14900,
     categoria: "bebidas",
-    imagen: img("photo-1442550528053-c431ecb55509"),
     stock: 48,
     origen: "Veracruz",
-    destacado: false,
   },
 
-  // ===================== HOGAR (12) =====================
+  // ===================== HOGAR =====================
   {
     slug: "canasta-tejida",
     nombre: "Canasta Tejida de Palma",
@@ -612,10 +568,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 32900,
     precioAnteriorCentavos: 39900,
     categoria: "hogar",
-    imagen: img("photo-1595408076683-5d0c643e4f78"),
     stock: 25,
     origen: "Guerrero",
-    destacado: false,
   },
   {
     slug: "sarape-cojin",
@@ -625,10 +579,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 44900,
     precioAnteriorCentavos: 54900,
     categoria: "hogar",
-    imagen: img("photo-1584100936595-c0654b55a2e2"),
     stock: 30,
     origen: "Coahuila",
-    destacado: false,
   },
   {
     slug: "vajilla-talavera",
@@ -638,7 +590,6 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 229900,
     precioAnteriorCentavos: 279900,
     categoria: "hogar",
-    imagen: img("photo-1603199506016-b9a594b593c0"),
     stock: 8,
     origen: "Puebla",
     destacado: true,
@@ -651,7 +602,6 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 189900,
     precioAnteriorCentavos: 229900,
     categoria: "hogar",
-    imagen: img("photo-1600166898405-da9535204843"),
     stock: 10,
     origen: "Oaxaca",
     destacado: true,
@@ -663,10 +613,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 79900,
     precioAnteriorCentavos: 99900,
     categoria: "hogar",
-    imagen: img("photo-1618220179428-22790b461013"),
     stock: 15,
     origen: "Oaxaca",
-    destacado: false,
   },
   {
     slug: "velas-cera-abeja",
@@ -675,10 +623,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 29900,
     precioAnteriorCentavos: 36900,
     categoria: "hogar",
-    imagen: img("photo-1602874801006-e26c4c5b5b6a"),
     stock: 40,
     origen: "Michoacán",
-    destacado: false,
   },
   {
     slug: "mantel-bordado",
@@ -688,10 +634,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 89900,
     precioAnteriorCentavos: 109900,
     categoria: "hogar",
-    imagen: img("photo-1565538810643-b5bdb714032a"),
     stock: 18,
     origen: "Oaxaca",
-    destacado: false,
   },
   {
     slug: "cazuela-barro",
@@ -700,10 +644,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 49900,
     precioAnteriorCentavos: 59900,
     categoria: "hogar",
-    imagen: img("photo-1591985666643-1ecd9b6b1d8f"),
     stock: 22,
     origen: "Michoacán",
-    destacado: false,
   },
   {
     slug: "lampara-papel-picado",
@@ -713,10 +655,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 54900,
     precioAnteriorCentavos: 69900,
     categoria: "hogar",
-    imagen: img("photo-1513506003901-1e6a229e2d15"),
     stock: 20,
     origen: "Puebla",
-    destacado: false,
   },
   {
     slug: "hamaca-yucateca",
@@ -726,7 +666,6 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 119900,
     precioAnteriorCentavos: 149900,
     categoria: "hogar",
-    imagen: img("photo-1540202404-a2f29016b523"),
     stock: 14,
     origen: "Yucatán",
     destacado: true,
@@ -738,10 +677,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 34900,
     precioAnteriorCentavos: 42900,
     categoria: "hogar",
-    imagen: img("photo-1608181831718-c9ffd8728e5b"),
     stock: 28,
     origen: "Oaxaca",
-    destacado: false,
   },
   {
     slug: "servilletero-madera",
@@ -750,13 +687,11 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 24900,
     precioAnteriorCentavos: 29900,
     categoria: "hogar",
-    imagen: img("photo-1594620302200-9a762244a156"),
     stock: 32,
     origen: "Michoacán",
-    destacado: false,
   },
 
-  // ===================== BELLEZA (10) =====================
+  // ===================== BELLEZA =====================
   {
     slug: "jabon-de-nopal",
     nombre: "Jabón Artesanal de Nopal",
@@ -765,10 +700,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 7900,
     precioAnteriorCentavos: 9900,
     categoria: "belleza",
-    imagen: img("photo-1600857544200-b2f666a9a2ec"),
     stock: 100,
     origen: "Jalisco",
-    destacado: false,
   },
   {
     slug: "aceite-aguacate",
@@ -778,7 +711,6 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 15900,
     precioAnteriorCentavos: 19900,
     categoria: "belleza",
-    imagen: img("photo-1556228578-8c89e6adf883"),
     stock: 60,
     origen: "Michoacán",
     destacado: true,
@@ -791,10 +723,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 18900,
     precioAnteriorCentavos: 23900,
     categoria: "belleza",
-    imagen: img("photo-1570194065650-d99fb4bedf0a"),
     stock: 45,
     origen: "Puebla",
-    destacado: false,
   },
   {
     slug: "exfoliante-cafe",
@@ -803,10 +733,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 13900,
     precioAnteriorCentavos: 17900,
     categoria: "belleza",
-    imagen: img("photo-1608248543803-ba4f8c70ae0b"),
     stock: 55,
     origen: "Chiapas",
-    destacado: false,
   },
   {
     slug: "shampoo-solido-sabila",
@@ -815,10 +743,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 11900,
     precioAnteriorCentavos: 14900,
     categoria: "belleza",
-    imagen: img("photo-1626766632648-8e14b4c1b0f0"),
     stock: 70,
     origen: "Jalisco",
-    destacado: false,
   },
   {
     slug: "mascarilla-barro",
@@ -827,10 +753,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 12900,
     precioAnteriorCentavos: 15900,
     categoria: "belleza",
-    imagen: img("photo-1596755389378-c31d21fd1273"),
     stock: 50,
     origen: "Morelos",
-    destacado: false,
   },
   {
     slug: "perfume-vainilla",
@@ -839,22 +763,19 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 29900,
     precioAnteriorCentavos: 37900,
     categoria: "belleza",
-    imagen: img("photo-1541643600914-78b084683601"),
     stock: 35,
     origen: "Veracruz",
     destacado: true,
   },
   {
-    slug: "bálsamo-labial-cacao",
+    slug: "balsamo-labial-cacao",
     nombre: "Bálsamo Labial de Cacao",
     descripcion: "Bálsamo labial nutritivo de manteca de cacao puro.",
     precioCentavos: 6900,
     precioAnteriorCentavos: 8900,
     categoria: "belleza",
-    imagen: img("photo-1591375372226-3b5c1b8f0e95"),
     stock: 90,
     origen: "Tabasco",
-    destacado: false,
   },
   {
     slug: "sales-bano-maguey",
@@ -863,10 +784,8 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 14900,
     precioAnteriorCentavos: 18900,
     categoria: "belleza",
-    imagen: img("photo-1601049541289-9b1b7bbbfe19"),
     stock: 48,
     origen: "Oaxaca",
-    destacado: false,
   },
   {
     slug: "jabon-carbon",
@@ -875,15 +794,11 @@ export const PRODUCTOS_BEBIDAS_HOGAR_BELLEZA: SeedProducto[] = [
     precioCentavos: 8900,
     precioAnteriorCentavos: 10900,
     categoria: "belleza",
-    imagen: img("photo-1612201142855-7873bc1661a0"),
     stock: 65,
     origen: "Jalisco",
-    destacado: false,
   },
-];
 
-export const PRODUCTOS_RESTO: SeedProducto[] = [
-  // ===================== JOYERÍA (8) =====================
+  // ===================== JOYERÍA =====================
   {
     slug: "collar-plata-taxco",
     nombre: "Collar de Plata de Taxco",
@@ -892,7 +807,6 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 149900,
     precioAnteriorCentavos: 189900,
     categoria: "joyeria",
-    imagen: img("photo-1515562141207-7a88fb7ce338"),
     stock: 20,
     origen: "Guerrero",
     destacado: true,
@@ -904,7 +818,6 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 89900,
     precioAnteriorCentavos: 109900,
     categoria: "joyeria",
-    imagen: img("photo-1535632066927-ab7c9ab60908"),
     stock: 25,
     origen: "Oaxaca",
     destacado: true,
@@ -917,10 +830,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 99900,
     precioAnteriorCentavos: 124900,
     categoria: "joyeria",
-    imagen: img("photo-1611591437281-460bfbe1220a"),
     stock: 18,
     origen: "Chiapas",
-    destacado: false,
   },
   {
     slug: "anillo-plata-turquesa",
@@ -929,10 +840,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 119900,
     precioAnteriorCentavos: 149900,
     categoria: "joyeria",
-    imagen: img("photo-1603561591411-07134e71a2a9"),
     stock: 15,
     origen: "Guerrero",
-    destacado: false,
   },
   {
     slug: "collar-chaquira-huichol",
@@ -941,10 +850,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 59900,
     precioAnteriorCentavos: 74900,
     categoria: "joyeria",
-    imagen: img("photo-1599643478518-a784e5dc4c8f"),
     stock: 30,
     origen: "Nayarit",
-    destacado: false,
   },
   {
     slug: "aretes-chaquira",
@@ -954,10 +861,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 34900,
     precioAnteriorCentavos: 44900,
     categoria: "joyeria",
-    imagen: img("photo-1630019852942-f89202989a59"),
     stock: 40,
     origen: "Jalisco",
-    destacado: false,
   },
   {
     slug: "dije-ojo-venado",
@@ -966,10 +871,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 44900,
     precioAnteriorCentavos: 54900,
     categoria: "joyeria",
-    imagen: img("photo-1611652022419-a9419f74343d"),
     stock: 35,
     origen: "Oaxaca",
-    destacado: false,
   },
   {
     slug: "brazalete-plata-martillado",
@@ -978,13 +881,11 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 129900,
     precioAnteriorCentavos: 159900,
     categoria: "joyeria",
-    imagen: img("photo-1573408301185-9146fe634ad0"),
     stock: 12,
     origen: "Guerrero",
-    destacado: false,
   },
 
-  // ===================== JUGUETES (8) =====================
+  // ===================== JUGUETES =====================
   {
     slug: "loteria-mexicana",
     nombre: "Lotería Mexicana Clásica",
@@ -992,7 +893,6 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 14900,
     precioAnteriorCentavos: 18900,
     categoria: "juguetes",
-    imagen: img("photo-1611996575749-79a3a250f948"),
     stock: 60,
     origen: "Jalisco",
     destacado: true,
@@ -1004,10 +904,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 5900,
     precioAnteriorCentavos: 7900,
     categoria: "juguetes",
-    imagen: img("photo-1596461404969-9ae70f2830c1"),
     stock: 80,
     origen: "Michoacán",
-    destacado: false,
   },
   {
     slug: "balero-tradicional",
@@ -1017,19 +915,16 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 6900,
     precioAnteriorCentavos: 8900,
     categoria: "juguetes",
-    imagen: img("photo-1587654780291-39c9404d746b"),
     stock: 75,
     origen: "Guanajuato",
-    destacado: false,
   },
   {
-    slug: "muñeca-maria",
+    slug: "muneca-lele",
     nombre: "Muñeca Lele Artesanal",
     descripcion: "Muñeca de trapo otomí bordada a mano, símbolo de Querétaro.",
     precioCentavos: 24900,
     precioAnteriorCentavos: 29900,
     categoria: "juguetes",
-    imagen: img("photo-1559454403-b8fb88521f11"),
     stock: 45,
     origen: "Querétaro",
     destacado: true,
@@ -1041,10 +936,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 19900,
     precioAnteriorCentavos: 24900,
     categoria: "juguetes",
-    imagen: img("photo-1600861194942-f883de0dfe96"),
     stock: 40,
     origen: "Michoacán",
-    destacado: false,
   },
   {
     slug: "memorama-mexicano",
@@ -1053,10 +946,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 11900,
     precioAnteriorCentavos: 14900,
     categoria: "juguetes",
-    imagen: img("photo-1632501641765-e568d28b0015"),
     stock: 55,
     origen: "Ciudad de México",
-    destacado: false,
   },
   {
     slug: "yoyo-madera",
@@ -1065,10 +956,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 7900,
     precioAnteriorCentavos: 9900,
     categoria: "juguetes",
-    imagen: img("photo-1575364289437-fb1a5a4e5c6c"),
     stock: 70,
     origen: "Jalisco",
-    destacado: false,
   },
   {
     slug: "rompecabezas-mapa-mexico",
@@ -1077,13 +966,11 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 16900,
     precioAnteriorCentavos: 20900,
     categoria: "juguetes",
-    imagen: img("photo-1606092195730-5d7b9af1efc5"),
     stock: 50,
     origen: "Ciudad de México",
-    destacado: false,
   },
 
-  // ===================== LIBROS Y MÚSICA (6) =====================
+  // ===================== LIBROS Y MÚSICA =====================
   {
     slug: "libro-cocina-mexicana",
     nombre: "Gran Libro de Cocina Mexicana",
@@ -1092,7 +979,6 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 44900,
     precioAnteriorCentavos: 54900,
     categoria: "libros",
-    imagen: img("photo-1544716278-ca5e3f4abd8c"),
     stock: 30,
     origen: "Ciudad de México",
     destacado: true,
@@ -1105,10 +991,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 39900,
     precioAnteriorCentavos: 49900,
     categoria: "libros",
-    imagen: img("photo-1603048588665-791ca8aea617"),
     stock: 20,
     origen: "Veracruz",
-    destacado: false,
   },
   {
     slug: "libro-arte-popular",
@@ -1118,10 +1002,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 54900,
     precioAnteriorCentavos: 69900,
     categoria: "libros",
-    imagen: img("photo-1512820790803-83ca734da794"),
     stock: 25,
     origen: "Ciudad de México",
-    destacado: false,
   },
   {
     slug: "poesia-mexicana",
@@ -1131,10 +1013,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 29900,
     precioAnteriorCentavos: 36900,
     categoria: "libros",
-    imagen: img("photo-1476275466078-4007374efbbe"),
     stock: 35,
     origen: "Ciudad de México",
-    destacado: false,
   },
   {
     slug: "guitarra-paracho",
@@ -1144,7 +1024,6 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 189900,
     precioAnteriorCentavos: 229900,
     categoria: "libros",
-    imagen: img("photo-1510915361894-db8b60106cb1"),
     stock: 10,
     origen: "Michoacán",
     destacado: true,
@@ -1157,13 +1036,11 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 19900,
     precioAnteriorCentavos: 24900,
     categoria: "libros",
-    imagen: img("photo-1495446815901-a7297e633e8d"),
     stock: 40,
     origen: "Jalisco",
-    destacado: false,
   },
 
-  // ===================== DEPORTES (6) =====================
+  // ===================== DEPORTES =====================
   {
     slug: "jersey-seleccion",
     nombre: "Jersey de la Selección Mexicana",
@@ -1172,7 +1049,6 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 89900,
     precioAnteriorCentavos: 109900,
     categoria: "deportes",
-    imagen: img("photo-1517466787929-bc90951d0974"),
     stock: 50,
     origen: "Ciudad de México",
     destacado: true,
@@ -1184,10 +1060,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 44900,
     precioAnteriorCentavos: 54900,
     categoria: "deportes",
-    imagen: img("photo-1614632537190-23e4146777db"),
     stock: 60,
     origen: "Nuevo León",
-    destacado: false,
   },
   {
     slug: "guantes-box",
@@ -1197,10 +1071,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 59900,
     precioAnteriorCentavos: 74900,
     categoria: "deportes",
-    imagen: img("photo-1583473848882-f9a5bc7fd2ee"),
     stock: 30,
     origen: "Ciudad de México",
-    destacado: false,
   },
   {
     slug: "mochila-senderismo",
@@ -1209,10 +1081,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 99900,
     precioAnteriorCentavos: 124900,
     categoria: "deportes",
-    imagen: img("photo-1553062407-98eeb64c6a62"),
     stock: 25,
     origen: "Nuevo León",
-    destacado: false,
   },
   {
     slug: "termo-acero",
@@ -1222,10 +1092,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 34900,
     precioAnteriorCentavos: 42900,
     categoria: "deportes",
-    imagen: img("photo-1602143407151-7111542de6e8"),
     stock: 70,
     origen: "Jalisco",
-    destacado: false,
   },
   {
     slug: "lazo-charro",
@@ -1234,13 +1102,11 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 49900,
     precioAnteriorCentavos: 59900,
     categoria: "deportes",
-    imagen: img("photo-1511994714008-b6d68a8b32a2"),
     stock: 20,
     origen: "Jalisco",
-    destacado: false,
   },
 
-  // ===================== MASCOTAS (5) =====================
+  // ===================== MASCOTAS =====================
   {
     slug: "collar-perro-bordado",
     nombre: "Collar para Perro Bordado",
@@ -1248,7 +1114,6 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 24900,
     precioAnteriorCentavos: 29900,
     categoria: "mascotas",
-    imagen: img("photo-1583337130417-3346a1be7dee"),
     stock: 45,
     origen: "Jalisco",
     destacado: true,
@@ -1260,10 +1125,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 54900,
     precioAnteriorCentavos: 69900,
     categoria: "mascotas",
-    imagen: img("photo-1541599540903-216a46ca1dc0"),
     stock: 20,
     origen: "Guerrero",
-    destacado: false,
   },
   {
     slug: "juguete-mascota-fibra",
@@ -1272,10 +1135,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 12900,
     precioAnteriorCentavos: 15900,
     categoria: "mascotas",
-    imagen: img("photo-1545249390-6bdfa286032f"),
     stock: 55,
     origen: "Oaxaca",
-    destacado: false,
   },
   {
     slug: "plato-barro-mascota",
@@ -1284,10 +1145,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 18900,
     precioAnteriorCentavos: 23900,
     categoria: "mascotas",
-    imagen: img("photo-1548767797-d8c844163c4c"),
     stock: 40,
     origen: "Michoacán",
-    destacado: false,
   },
   {
     slug: "correa-piel-trenzada",
@@ -1296,13 +1155,11 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 34900,
     precioAnteriorCentavos: 42900,
     categoria: "mascotas",
-    imagen: img("photo-1601758228041-f3b2795255f1"),
     stock: 30,
     origen: "Guanajuato",
-    destacado: false,
   },
 
-  // ===================== ELECTRÓNICA (5) =====================
+  // ===================== ELECTRÓNICA =====================
   {
     slug: "bocina-bluetooth-artesanal",
     nombre: "Bocina Bluetooth con Funda Artesanal",
@@ -1311,7 +1168,6 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 79900,
     precioAnteriorCentavos: 99900,
     categoria: "electronica",
-    imagen: img("photo-1608043152269-423dbba4e7e1"),
     stock: 35,
     origen: "Jalisco",
     destacado: true,
@@ -1324,10 +1180,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 59900,
     precioAnteriorCentavos: 74900,
     categoria: "electronica",
-    imagen: img("photo-1590658268037-6bf12165a8df"),
     stock: 50,
     origen: "Nuevo León",
-    destacado: false,
   },
   {
     slug: "funda-celular-bordada",
@@ -1337,10 +1191,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 19900,
     precioAnteriorCentavos: 24900,
     categoria: "electronica",
-    imagen: img("photo-1601784551446-20c9e07cdbdb"),
     stock: 60,
     origen: "Chiapas",
-    destacado: false,
   },
   {
     slug: "powerbank-10000",
@@ -1349,10 +1201,8 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 39900,
     precioAnteriorCentavos: 49900,
     categoria: "electronica",
-    imagen: img("photo-1609592806596-4b1b1b1b1b1b"),
     stock: 45,
     origen: "Nuevo León",
-    destacado: false,
   },
   {
     slug: "lampara-led-talavera",
@@ -1361,17 +1211,10 @@ export const PRODUCTOS_RESTO: SeedProducto[] = [
     precioCentavos: 64900,
     precioAnteriorCentavos: 79900,
     categoria: "electronica",
-    imagen: img("photo-1507003211169-0a1dd7228f2d"),
     stock: 25,
     origen: "Puebla",
-    destacado: false,
   },
-];
+);
 
-/** Catálogo completo (100 productos) combinando todas las secciones. */
-export const CATALOGO_COMPLETO: SeedProducto[] = [
-  ...PRODUCTOS_SEED,
-  ...PRODUCTOS_ROPA_ALIMENTOS,
-  ...PRODUCTOS_BEBIDAS_HOGAR_BELLEZA,
-  ...PRODUCTOS_RESTO,
-];
+/** Catálogo completo listo para sembrar. */
+export const CATALOGO_COMPLETO: SeedProducto[] = ENTRADAS.map(p);
