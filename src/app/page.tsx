@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ProductoCard from "@/components/ProductoCard";
 import CategoriaIcono from "@/components/CategoriaIcono";
+import HeroCarrusel from "@/components/HeroCarrusel";
 import { CATEGORIAS, getProductosDestacados } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
@@ -30,48 +31,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-mexico-green via-emerald-700 to-emerald-900 text-white">
-        {/* Patrón decorativo */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-10"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 20% 30%, #fff 2px, transparent 2px), radial-gradient(circle at 70% 60%, #fff 2px, transparent 2px)",
-            backgroundSize: "48px 48px",
-          }}
-        />
-        <div className="relative mx-auto max-w-7xl px-4 py-16 md:py-24">
-          <div className="max-w-2xl">
-            <span className="inline-block rounded-full bg-white/15 px-4 py-1 text-sm font-medium backdrop-blur">
-              🌵 Hecho en México, con orgullo
-            </span>
-            <h1 className="mt-4 text-4xl font-extrabold leading-tight md:text-6xl">
-              Lo lindo de México,{" "}
-              <span className="text-amber-300">en tu puerta</span>
-            </h1>
-            <p className="mt-4 max-w-xl text-lg text-emerald-50">
-              Más de 100 productos auténticos: artesanías, textiles, alimentos,
-              joyería y más. Hechos por manos mexicanas. Envíos a toda la
-              República.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link
-                href="/categoria/artesanias"
-                className="rounded-lg bg-white px-6 py-3 font-semibold text-mexico-green shadow-lg transition-transform hover:scale-105"
-              >
-                Explorar productos
-              </Link>
-              <Link
-                href="/ofertas"
-                className="rounded-lg border-2 border-white px-6 py-3 font-semibold text-white transition-colors hover:bg-white/10"
-              >
-                Ver ofertas 🔥
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Hero carrusel (diapositivas con imagen de fondo y autoplay) */}
+      <HeroCarrusel />
 
       {/* Categorías */}
       <section className="mx-auto max-w-7xl px-4 py-14">
