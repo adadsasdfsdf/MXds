@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import { CATEGORIAS } from "@/lib/data";
 import { Logo } from "@/components/Logo";
 import BuscadorHeader from "@/components/BuscadorHeader";
+import CategoriaIcono from "@/components/CategoriaIcono";
 
 export default function Header() {
   const { totalItems } = useCarrito();
@@ -137,9 +138,9 @@ export default function Header() {
             <Link
               key={c.id}
               href={`/categoria/${c.id}`}
-              className="flex-shrink-0 whitespace-nowrap font-medium text-gray-600 transition-colors hover:text-mexico-green"
+              className="flex flex-shrink-0 items-center gap-1.5 whitespace-nowrap font-medium text-gray-600 transition-colors hover:text-mexico-green"
             >
-              <span className="mr-1">{c.emoji}</span>
+              <CategoriaIcono categoria={c.id} className="h-4 w-4" />
               {c.nombre}
             </Link>
           ))}

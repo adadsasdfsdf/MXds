@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { CATALOGO_COMPLETO } from "../../../../prisma/productos";
+import { generarResenas } from "../../../../prisma/resenas";
 
 /**
  * Endpoint para sembrar/actualizar el catálogo tras el despliegue.
@@ -42,25 +43,45 @@ export async function GET(request: Request) {
     },
   });
 
-  // Catálogo completo (upsert por slug)
+  // Catálogo completo (upsert por slug) + reseñas
   let creados = 0;
   let actualizados = 0;
-  for (const p of CATALOGO_COMPLETO) {
+  let totalResenas = 0;
+  for (const prod of CATALOGO_COMPLETO) {
     const existente = await prisma.producto.findUnique({
-      where: { slug: p.slug },
+      where: { slug: prod.slug },
     });
-    await prisma.producto.upsert({
-      where: { slug: p.slug },
-      update: p,
-      create: p,
+    const guardado = await prisma.producto.upsert({
+      where: { slug: prod.slug },
+      update: prod,
+      create: prod,
     });
     if (existente) actualizados++;
     else creados++;
+
+    // Generar reseñas solo si el producto aún no tiene.
+    const tieneResenas = await prisma.resena.count({
+      where: { productoId: guardado.id },
+    });
+    if (tieneResenas === 0) {
+      const resenas = generarResenas(prod.slug);
+      await prisma.resena.createMany({
+        data: resenas.map((r) => ({
+          productoId: guardado.id,
+          autor: r.autor,
+          calificacion: r.calificacion,
+          comentario: r.comentario,
+          verificada: r.verificada,
+          creadoEn: new Date(Date.now() - r.diasAtras * 86400000),
+        })),
+      });
+      totalResenas += resenas.length;
+    }
   }
 
   return NextResponse.json({
     ok: true,
-    mensaje: `Catálogo sincronizado: ${creados} creados, ${actualizados} actualizados (total ${CATALOGO_COMPLETO.length}).`,
+    mensaje: `Catálogo sincronizado: ${creados} creados, ${actualizados} actualizados (total ${CATALOGO_COMPLETO.length}). Reseñas generadas: ${totalResenas}.`,
     admin: "admin@tiendamexicana.mx / admin123",
   });
 }

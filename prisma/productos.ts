@@ -3,11 +3,10 @@
  * Precios en centavos (IVA incluido). Todos con precio anterior para mostrar
  * el descuento.
  *
- * Las imágenes usan Lorem Picsum con un "seed" único por producto
- * (https://picsum.photos/seed/{seed}/800/800). Ventajas:
- *  - No requiere API key ni caduca.
- *  - Cada producto tiene una imagen distinta y estable (siempre la misma).
- *  - Nunca aparecen imágenes rotas ni repetidas.
+ * Las imágenes usan LoremFlickr con palabras clave temáticas por producto
+ * y categoría (https://loremflickr.com/800/800/{keywords}?lock={n}), de modo
+ * que cada producto muestra una foto real relacionada con su tipo. El
+ * parámetro `lock` fija una imagen concreta y estable por producto.
  *
  * Compartido por el seed de desarrollo (prisma/seed.ts) y el endpoint
  * /api/seed usado tras el despliegue.
@@ -26,9 +25,77 @@ export interface SeedProducto {
   destacado: boolean;
 }
 
-/** Imagen estable y única por producto, basada en su slug. */
-const img = (seed: string) =>
-  `https://picsum.photos/seed/mexlindo-${seed}/800/800`;
+/**
+ * Palabras clave de imagen por categoría (en inglés, que es lo que mejor
+ * entienden los bancos de imágenes). Se usan para traer una foto temática.
+ */
+const KEYWORDS_CATEGORIA: Record<string, string> = {
+  artesanias: "handicraft,pottery,mexican,craft",
+  ropa: "clothing,textile,fashion,fabric",
+  alimentos: "mexican,food,spices,ingredients",
+  bebidas: "drink,beverage,bottle,coffee",
+  hogar: "home,decor,ceramic,interior",
+  belleza: "cosmetics,soap,skincare,beauty",
+  joyeria: "jewelry,silver,necklace,ring",
+  juguetes: "toy,wooden,colorful,kids",
+  libros: "book,music,vintage,reading",
+  deportes: "sport,outdoor,fitness,equipment",
+  mascotas: "pet,dog,cat,animal",
+  electronica: "gadget,electronics,device,technology",
+};
+
+/**
+ * Palabras clave más específicas para ciertos productos, para que la imagen
+ * se acerque más al contenido real del producto.
+ */
+const KEYWORDS_PRODUCTO: Record<string, string> = {
+  "cafe-chiapas-500g": "coffee,beans",
+  "cafe-veracruz-molido": "coffee,ground",
+  "mezcal-espadin": "mezcal,agave,drink",
+  "tequila-reposado": "tequila,bottle",
+  "cerveza-artesanal-6pack": "beer,craft",
+  "chocolate-mesa": "chocolate,cacao",
+  "cacao-polvo": "cacao,powder",
+  "miel-agave": "honey,syrup",
+  "queso-cotija": "cheese",
+  "frijol-negro-organico": "beans,legumes",
+  "chiles-secos-mix": "chili,peppers,dried",
+  "salsa-macha-artesanal": "salsa,sauce,chili",
+  "jabon-de-nopal": "soap,handmade",
+  "jabon-carbon": "soap,charcoal",
+  "aceite-aguacate": "avocado,oil",
+  "perfume-vainilla": "perfume,bottle",
+  "collar-plata-taxco": "necklace,silver",
+  "aretes-filigrana": "earrings,jewelry",
+  "anillo-plata-turquesa": "ring,turquoise",
+  "guitarra-paracho": "guitar,acoustic",
+  "vinilo-musica-tradicional": "vinyl,record",
+  "libro-cocina-mexicana": "cookbook,book",
+  "balon-futbol": "soccer,ball",
+  "jersey-seleccion": "jersey,soccer",
+  "guantes-box": "boxing,gloves",
+  "mochila-senderismo": "backpack,hiking",
+  "audifonos-inalambricos": "headphones,earbuds",
+  "powerbank-10000": "powerbank,battery",
+  "bocina-bluetooth-artesanal": "speaker,bluetooth",
+  "hamaca-yucateca": "hammock",
+  "sombrero-charro": "hat,sombrero",
+  "velas-cera-abeja": "candles",
+  "cafe-chiapas": "coffee",
+};
+
+/**
+ * Imagen temática del producto. Usa LoremFlickr, que devuelve una foto real
+ * según palabras clave; el parámetro `lock` fija una imagen concreta por
+ * producto (estable y distinta para cada uno).
+ */
+function imagenProducto(slug: string, categoria: string, idx: number): string {
+  const keywords =
+    KEYWORDS_PRODUCTO[slug] ?? KEYWORDS_CATEGORIA[categoria] ?? "mexican,craft";
+  // lock determinista a partir del índice para que cada producto tenga su foto.
+  const lock = 1000 + idx;
+  return `https://loremflickr.com/800/800/${keywords}?lock=${lock}`;
+}
 
 interface Entrada {
   slug: string;
@@ -43,7 +110,7 @@ interface Entrada {
 }
 
 /** Construye un SeedProducto a partir de una entrada compacta. */
-function p(e: Entrada): SeedProducto {
+function p(e: Entrada, idx: number): SeedProducto {
   return {
     slug: e.slug,
     nombre: e.nombre,
@@ -51,7 +118,7 @@ function p(e: Entrada): SeedProducto {
     precioCentavos: e.precioCentavos,
     precioAnteriorCentavos: e.precioAnteriorCentavos,
     categoria: e.categoria,
-    imagen: img(e.slug),
+    imagen: imagenProducto(e.slug, e.categoria, idx),
     stock: e.stock,
     origen: e.origen,
     destacado: e.destacado ?? false,
@@ -1217,4 +1284,6 @@ ENTRADAS.push(
 );
 
 /** Catálogo completo listo para sembrar. */
-export const CATALOGO_COMPLETO: SeedProducto[] = ENTRADAS.map(p);
+export const CATALOGO_COMPLETO: SeedProducto[] = ENTRADAS.map((e, i) =>
+  p(e, i),
+);

@@ -38,8 +38,24 @@ model Producto {
   destacado     Boolean       @default(false)
   activo        Boolean       @default(true)
   itemsPedido   ItemPedido[]
+  resenas       Resena[]
   creadoEn      DateTime      @default(now())
   actualizadoEn DateTime      @updatedAt
+}
+
+model Resena {
+  id          String   @id @default(cuid())
+  producto    Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  productoId  String
+  autor       String
+  // Calificación de 1 a 5 estrellas
+  calificacion Int
+  comentario  String
+  // Compra verificada
+  verificada  Boolean  @default(true)
+  creadoEn    DateTime @default(now())
+
+  @@index([productoId])
 }
 
 model Pedido {

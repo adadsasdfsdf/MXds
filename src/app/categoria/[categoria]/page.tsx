@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import ProductoCard from "@/components/ProductoCard";
+import CategoriaIcono from "@/components/CategoriaIcono";
 import { CATEGORIAS, getProductosPorCategoria } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +21,9 @@ export default async function CategoriaPage({
     <div className="mx-auto max-w-7xl px-4 py-10">
       <div className="mb-8">
         <h1 className="flex items-center gap-3 text-3xl font-bold text-gray-900">
-          <span className="text-4xl">{info!.emoji}</span>
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-mexico-green/10 text-mexico-green">
+            <CategoriaIcono categoria={info!.id} className="h-6 w-6" />
+          </span>
           {info!.nombre}
         </h1>
         <p className="mt-2 text-gray-600">{info!.descripcion}</p>

@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { CATALOGO_COMPLETO } from "./productos";
+import { generarResenas } from "./resenas";
 
 const prisma = new PrismaClient();
 
@@ -35,15 +36,36 @@ async function main() {
   });
   console.log("👤 Cliente: cliente@ejemplo.mx / cliente123");
 
-  // Productos (catálogo completo)
-  for (const p of CATALOGO_COMPLETO) {
-    await prisma.producto.upsert({
-      where: { slug: p.slug },
-      update: p,
-      create: p,
+  // Productos + reseñas
+  let totalResenas = 0;
+  for (const prod of CATALOGO_COMPLETO) {
+    const creado = await prisma.producto.upsert({
+      where: { slug: prod.slug },
+      update: prod,
+      create: prod,
     });
+
+    // Regenerar reseñas solo si el producto no tiene.
+    const existentes = await prisma.resena.count({
+      where: { productoId: creado.id },
+    });
+    if (existentes === 0) {
+      const resenas = generarResenas(prod.slug);
+      await prisma.resena.createMany({
+        data: resenas.map((r) => ({
+          productoId: creado.id,
+          autor: r.autor,
+          calificacion: r.calificacion,
+          comentario: r.comentario,
+          verificada: r.verificada,
+          creadoEn: new Date(Date.now() - r.diasAtras * 86400000),
+        })),
+      });
+      totalResenas += resenas.length;
+    }
   }
   console.log(`📦 ${CATALOGO_COMPLETO.length} productos sembrados`);
+  console.log(`💬 ${totalResenas} reseñas generadas`);
 
   console.log("✅ Listo!");
 }
