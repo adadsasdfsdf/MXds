@@ -6,6 +6,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ChatSoporte from "@/components/ChatSoporte";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -42,6 +43,7 @@ export default function RootLayout({
             <ChatSoporte />
           </CarritoProvider>
         </AuthProvider>
+        <Analytics />
       </body>
     </html>
   );
