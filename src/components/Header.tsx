@@ -9,6 +9,8 @@ import { CATEGORIAS } from "@/lib/data";
 import { Logo } from "@/components/Logo";
 import BuscadorHeader from "@/components/BuscadorHeader";
 import CategoriaIcono from "@/components/CategoriaIcono";
+import { IconoUsuario, IconoCarrito, IconoChevron } from "@/components/Iconos";
+import BarraPromo from "@/components/BarraPromo";
 
 export default function Header() {
   const { totalItems } = useCarrito();
@@ -25,13 +27,8 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur">
-      {/* Barra superior con mensaje de envío */}
-      <div className="bg-mexico-green text-center text-sm text-white">
-        <p className="py-1.5">
-          🎉 ¡Nueva tienda! 15% de descuento en todo · Envío gratis desde $999
-          MXN
-        </p>
-      </div>
+      {/* Barra superior con anuncios en movimiento */}
+      <BarraPromo />
 
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-4">
         <Link href="/" className="flex-shrink-0">
@@ -40,17 +37,23 @@ export default function Header() {
 
         <BuscadorHeader />
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {/* Cuenta de usuario */}
           <div className="relative">
             <button
               onClick={() => setMenuAbierto((v) => !v)}
-              className="flex items-center gap-1 rounded-lg px-2 py-2 text-sm font-medium text-gray-700 hover:text-mexico-green"
+              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 hover:text-mexico-green"
             >
-              <span>👤</span>
-              <span className="hidden sm:inline">
-                {usuario ? usuario.nombre.split(" ")[0] : "Cuenta"}
+              <IconoUsuario className="h-5 w-5" />
+              <span className="hidden text-left leading-tight sm:block">
+                <span className="block text-[11px] font-normal text-gray-400">
+                  {usuario ? "Hola," : "Bienvenido"}
+                </span>
+                <span className="block font-semibold">
+                  {usuario ? usuario.nombre.split(" ")[0] : "Mi cuenta"}
+                </span>
               </span>
+              <IconoChevron className="hidden h-3.5 w-3.5 text-gray-400 sm:block" />
             </button>
 
             {menuAbierto && (
@@ -118,12 +121,12 @@ export default function Header() {
 
           <Link
             href="/carrito"
-            className="relative flex items-center gap-2 rounded-lg bg-mexico-green px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-mexico-green/90"
+            className="relative flex items-center gap-2 rounded-lg bg-mexico-green px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-mexico-green/90"
           >
-            <span>🛒</span>
+            <IconoCarrito className="h-5 w-5" />
             <span className="hidden sm:inline">Carrito</span>
             {totalItems > 0 && (
-              <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-mexico-red text-xs font-bold text-white">
+              <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-mexico-red text-xs font-bold text-white ring-2 ring-white">
                 {totalItems}
               </span>
             )}
@@ -134,6 +137,12 @@ export default function Header() {
       {/* Navegación de categorías (segunda fila, con scroll horizontal) */}
       <nav className="border-t border-gray-100 bg-white">
         <div className="mx-auto flex max-w-7xl items-center gap-5 overflow-x-auto px-4 py-2.5 text-sm">
+          <Link
+            href="/ofertas"
+            className="flex flex-shrink-0 items-center gap-1 whitespace-nowrap font-bold text-mexico-red transition-colors hover:text-mexico-red/80"
+          >
+            🔥 Ofertas
+          </Link>
           {CATEGORIAS.map((c) => (
             <Link
               key={c.id}

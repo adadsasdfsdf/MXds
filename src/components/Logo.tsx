@@ -42,10 +42,15 @@ export function LogoIcon({ className = "h-8 w-8" }: { className?: string }) {
 /** Logo con texto para el header y footer. */
 export function Logo({ className = "" }: { className?: string }) {
   return (
-    <span className={`flex items-center gap-2 ${className}`}>
-      <LogoIcon className="h-9 w-9" />
-      <span className="text-xl font-extrabold tracking-tight text-mexico-green">
-        Mex<span className="text-mexico-red">lindo</span>
+    <span className={`flex items-center gap-2.5 ${className}`}>
+      <LogoIcon className="h-10 w-10" />
+      <span className="flex flex-col leading-none">
+        <span className="text-2xl font-black tracking-tight text-mexico-green">
+          Mex<span className="text-mexico-red">lindo</span>
+        </span>
+        <span className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.2em] text-gray-400">
+          Tienda Mexicana
+        </span>
       </span>
     </span>
   );

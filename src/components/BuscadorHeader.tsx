@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { IconoBuscar } from "@/components/Iconos";
 
 export default function BuscadorHeader() {
   const router = useRouter();
@@ -20,15 +21,15 @@ export default function BuscadorHeader() {
       <input
         value={q}
         onChange={(e) => setQ(e.target.value)}
-        placeholder="Buscar productos..."
-        className="w-full rounded-full border border-gray-300 bg-gray-50 py-2 pl-4 pr-10 text-sm focus:border-mexico-green focus:bg-white focus:outline-none"
+        placeholder="Buscar productos, categorías y más..."
+        className="w-full rounded-full border border-gray-300 bg-gray-50 py-2.5 pl-5 pr-14 text-sm transition-colors focus:border-mexico-green focus:bg-white focus:outline-none focus:ring-2 focus:ring-mexico-green/20"
       />
       <button
         type="submit"
-        className="absolute right-1 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-gray-400 hover:text-mexico-green"
+        className="absolute right-1.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-mexico-green text-white transition-colors hover:bg-mexico-green/90"
         aria-label="Buscar"
       >
-        🔍
+        <IconoBuscar className="h-4 w-4" />
       </button>
     </form>
   );
