@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
-export default function LoginPage() {
+function LoginForm() {
   const { login } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -89,5 +89,15 @@ export default function LoginPage() {
         <p>👤 Cliente: cliente@ejemplo.mx / cliente123</p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  // useSearchParams() debe ir dentro de un <Suspense> para que Next.js
+  // pueda prerenderizar la página en el build de producción.
+  return (
+    <Suspense fallback={<div className="mx-auto max-w-md px-4 py-16" />}>
+      <LoginForm />
+    </Suspense>
   );
 }
