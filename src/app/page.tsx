@@ -12,8 +12,8 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl px-4 py-16 md:py-24">
           <div className="max-w-2xl">
             <h1 className="text-4xl font-extrabold leading-tight md:text-5xl">
-              Lo mejor de México,{" "}
-              <span className="text-amber-300">directo a tu puerta</span>
+              Lo lindo de México,{" "}
+              <span className="text-amber-300">en tu puerta</span>
             </h1>
             <p className="mt-4 text-lg text-emerald-50">
               Artesanías, textiles, alimentos y más. Productos auténticos hechos

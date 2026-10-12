@@ -1,20 +1,16 @@
 import Link from "next/link";
 import { CATEGORIAS } from "@/lib/data";
+import { Logo } from "@/components/Logo";
 
 export default function Footer() {
   return (
     <footer className="mt-16 border-t border-gray-200 bg-mexico-sand">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 md:grid-cols-4">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">🌵</span>
-            <span className="text-lg font-bold text-mexico-green">
-              Tienda<span className="text-mexico-red">Mexicana</span>
-            </span>
-          </div>
+          <Logo />
           <p className="mt-3 text-sm text-gray-600">
-            Productos auténticos hechos en México. Apoyamos a artesanos y
-            productores locales.
+            Lo lindo de México, en tu puerta. Productos auténticos hechos por
+            manos mexicanas. Apoyamos a artesanos y productores locales.
           </p>
         </div>
 
@@ -57,7 +53,7 @@ export default function Footer() {
 
       <div className="border-t border-gray-200 py-4 text-center text-xs text-gray-500">
         <p>
-          © {new Date().getFullYear()} TiendaMexicana · Hecho con 💚 en México ·
+          © {new Date().getFullYear()} Mexlindo · Hecho con 💚 en México ·
           Precios en pesos mexicanos (MXN), IVA incluido
         </p>
       </div>

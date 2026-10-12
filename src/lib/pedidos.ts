@@ -82,7 +82,7 @@ export async function crearPedido(
     totalCentavos,
     metodoPago: input.metodoPago,
     email: input.email,
-    descripcion: `Pedido ${numero} · TiendaMexicana`,
+    descripcion: `Pedido ${numero} · Mexlindo`,
   });
 
   // 3. Transacción: crear pedido + descontar stock
