@@ -3,10 +3,10 @@
  * Precios en centavos (IVA incluido). Todos con precio anterior para mostrar
  * el descuento.
  *
- * Las imágenes usan LoremFlickr con palabras clave temáticas por producto
- * y categoría (https://loremflickr.com/800/800/{keywords}?lock={n}), de modo
- * que cada producto muestra una foto real relacionada con su tipo. El
- * parámetro `lock` fija una imagen concreta y estable por producto.
+ * Las imágenes son fotos de Unsplash (CDN estable images.unsplash.com),
+ * verificadas y organizadas por categoría. Cada producto usa una foto
+ * específica o rota entre las de su categoría, de modo que siempre cargan
+ * y se ven acordes al tipo de producto.
  *
  * Compartido por el seed de desarrollo (prisma/seed.ts) y el endpoint
  * /api/seed usado tras el despliegue.
@@ -29,72 +29,118 @@ export interface SeedProducto {
  * Palabras clave de imagen por categoría (en inglés, que es lo que mejor
  * entienden los bancos de imágenes). Se usan para traer una foto temática.
  */
-const KEYWORDS_CATEGORIA: Record<string, string> = {
-  artesanias: "handicraft,pottery,mexican,craft",
-  ropa: "clothing,textile,fashion,fabric",
-  alimentos: "mexican,food,spices,ingredients",
-  bebidas: "drink,beverage,bottle,coffee",
-  hogar: "home,decor,ceramic,interior",
-  belleza: "cosmetics,soap,skincare,beauty",
-  joyeria: "jewelry,silver,necklace,ring",
-  juguetes: "toy,wooden,colorful,kids",
-  libros: "book,music,vintage,reading",
-  deportes: "sport,outdoor,fitness,equipment",
-  mascotas: "pet,dog,cat,animal",
-  electronica: "gadget,electronics,device,technology",
-};
-
 /**
- * Palabras clave más específicas para ciertos productos, para que la imagen
- * se acerque más al contenido real del producto.
+ * Bancos de imágenes por categoría. Son fotos de Unsplash (CDN estable
+ * images.unsplash.com) verificadas y relacionadas con cada categoría.
+ * Los productos de una categoría rotan entre estas fotos, de modo que
+ * SIEMPRE cargan y se ven acordes al tipo de producto.
  */
-const KEYWORDS_PRODUCTO: Record<string, string> = {
-  "cafe-chiapas-500g": "coffee,beans",
-  "cafe-veracruz-molido": "coffee,ground",
-  "mezcal-espadin": "mezcal,agave,drink",
-  "tequila-reposado": "tequila,bottle",
-  "cerveza-artesanal-6pack": "beer,craft",
-  "chocolate-mesa": "chocolate,cacao",
-  "cacao-polvo": "cacao,powder",
-  "miel-agave": "honey,syrup",
-  "queso-cotija": "cheese",
-  "frijol-negro-organico": "beans,legumes",
-  "chiles-secos-mix": "chili,peppers,dried",
-  "salsa-macha-artesanal": "salsa,sauce,chili",
-  "jabon-de-nopal": "soap,handmade",
-  "jabon-carbon": "soap,charcoal",
-  "aceite-aguacate": "avocado,oil",
-  "perfume-vainilla": "perfume,bottle",
-  "collar-plata-taxco": "necklace,silver",
-  "aretes-filigrana": "earrings,jewelry",
-  "anillo-plata-turquesa": "ring,turquoise",
-  "guitarra-paracho": "guitar,acoustic",
-  "vinilo-musica-tradicional": "vinyl,record",
-  "libro-cocina-mexicana": "cookbook,book",
-  "balon-futbol": "soccer,ball",
-  "jersey-seleccion": "jersey,soccer",
-  "guantes-box": "boxing,gloves",
-  "mochila-senderismo": "backpack,hiking",
-  "audifonos-inalambricos": "headphones,earbuds",
-  "powerbank-10000": "powerbank,battery",
-  "bocina-bluetooth-artesanal": "speaker,bluetooth",
-  "hamaca-yucateca": "hammock",
-  "sombrero-charro": "hat,sombrero",
-  "velas-cera-abeja": "candles",
-  "cafe-chiapas": "coffee",
+const UNSPLASH = (id: string) =>
+  `https://images.unsplash.com/${id}?w=800&q=80&auto=format&fit=crop`;
+
+const IMAGENES_CATEGORIA: Record<string, string[]> = {
+  artesanias: [
+    UNSPLASH("photo-1528817622348-02c4a60fb6f6"), // cerámica
+    UNSPLASH("photo-1610701596007-11502861dcfa"), // artesanía barro
+    UNSPLASH("photo-1565193566173-7a0ee3dbe261"), // tallado madera
+    UNSPLASH("photo-1513519245088-0e12902e35ca"), // decoración
+  ],
+  ropa: [
+    UNSPLASH("photo-1489987707025-afc232f7ea0f"), // ropa
+    UNSPLASH("photo-1434389677669-e08b4cac3105"), // textil
+    UNSPLASH("photo-1483985988355-763728e1935b"), // moda
+    UNSPLASH("photo-1596755094514-f87e34085b2c"), // camisa
+  ],
+  alimentos: [
+    UNSPLASH("photo-1565299624946-b28f40a0ca4b"), // comida
+    UNSPLASH("photo-1596040033229-a9821ebd058d"), // especias
+    UNSPLASH("photo-1543339308-43e59d6b73a6"), // ingredientes
+    UNSPLASH("photo-1518779578993-ec3579fee39f"), // comida mexicana
+  ],
+  bebidas: [
+    UNSPLASH("photo-1559056199-641a0ac8b55e"), // café
+    UNSPLASH("photo-1514362545857-3bc16c4c7d1b"), // bebida
+    UNSPLASH("photo-1510812431401-41d2bd2722f3"), // botella
+    UNSPLASH("photo-1551024709-8f23befc6f87"), // bebida 2
+  ],
+  hogar: [
+    UNSPLASH("photo-1513506003901-1e6a229e2d15"), // decoración hogar
+    UNSPLASH("photo-1522771739844-6a9f6d5f14af"), // interior
+    UNSPLASH("photo-1578749556568-bc2c40e68b61"), // cerámica mesa
+    UNSPLASH("photo-1600166898405-da9535204843"), // textil hogar
+  ],
+  belleza: [
+    UNSPLASH("photo-1600857544200-b2f666a9a2ec"), // jabón
+    UNSPLASH("photo-1556228578-8c89e6adf883"), // cosmético
+    UNSPLASH("photo-1570194065650-d99fb4bedf0a"), // crema
+    UNSPLASH("photo-1596755389378-c31d21fd1273"), // skincare
+  ],
+  joyeria: [
+    UNSPLASH("photo-1515562141207-7a88fb7ce338"), // joyería
+    UNSPLASH("photo-1535632066927-ab7c9ab60908"), // aretes
+    UNSPLASH("photo-1611591437281-460bfbe1220a"), // pulsera
+    UNSPLASH("photo-1603561591411-07134e71a2a9"), // anillo
+  ],
+  juguetes: [
+    UNSPLASH("photo-1558060370-d644479cb6f7"), // juguetes
+    UNSPLASH("photo-1566576912321-d58ddd7a6088"), // juguete madera
+    UNSPLASH("photo-1596461404969-9ae70f2830c1"), // bloques
+    UNSPLASH("photo-1515488042361-ee00e0ddd4e4"), // colorido
+  ],
+  libros: [
+    UNSPLASH("photo-1544716278-ca5e3f4abd8c"), // libros
+    UNSPLASH("photo-1512820790803-83ca734da794"), // libro abierto
+    UNSPLASH("photo-1495446815901-a7297e633e8d"), // música
+    UNSPLASH("photo-1510915361894-db8b60106cb1"), // guitarra
+  ],
+  deportes: [
+    UNSPLASH("photo-1517466787929-bc90951d0974"), // deporte
+    UNSPLASH("photo-1614632537190-23e4146777db"), // balón
+    UNSPLASH("photo-1553062407-98eeb64c6a62"), // mochila
+    UNSPLASH("photo-1461896836934-ffe607ba8211"), // outdoor
+  ],
+  mascotas: [
+    UNSPLASH("photo-1583337130417-3346a1be7dee"), // perro
+    UNSPLASH("photo-1541599540903-216a46ca1dc0"), // mascota cama
+    UNSPLASH("photo-1545249390-6bdfa286032f"), // gato juguete
+    UNSPLASH("photo-1601758228041-f3b2795255f1"), // perro 2
+  ],
+  electronica: [
+    UNSPLASH("photo-1608043152269-423dbba4e7e1"), // bocina
+    UNSPLASH("photo-1590658268037-6bf12165a8df"), // audífonos
+    UNSPLASH("photo-1511707171634-5f897ff02aa9"), // gadget
+    UNSPLASH("photo-1498049794561-7780e7231661"), // electrónica
+  ],
+};
+
+/** Fotos específicas para ciertos productos (coinciden mejor con el nombre). */
+const IMAGEN_PRODUCTO: Record<string, string> = {
+  "cafe-chiapas-500g": UNSPLASH("photo-1559056199-641a0ac8b55e"),
+  "cafe-veracruz-molido": UNSPLASH("photo-1442512595331-e89e73853f31"),
+  "mezcal-espadin": UNSPLASH("photo-1514362545857-3bc16c4c7d1b"),
+  "tequila-reposado": UNSPLASH("photo-1516535794938-6063878f08cc"),
+  "chocolate-mesa": UNSPLASH("photo-1511381939415-e44015466834"),
+  "jabon-de-nopal": UNSPLASH("photo-1600857544200-b2f666a9a2ec"),
+  "aceite-aguacate": UNSPLASH("photo-1556228578-8c89e6adf883"),
+  "collar-plata-taxco": UNSPLASH("photo-1515562141207-7a88fb7ce338"),
+  "guitarra-paracho": UNSPLASH("photo-1510915361894-db8b60106cb1"),
+  "libro-cocina-mexicana": UNSPLASH("photo-1544716278-ca5e3f4abd8c"),
+  "balon-futbol": UNSPLASH("photo-1614632537190-23e4146777db"),
+  "jersey-seleccion": UNSPLASH("photo-1517466787929-bc90951d0974"),
+  "audifonos-inalambricos": UNSPLASH("photo-1590658268037-6bf12165a8df"),
+  "vajilla-talavera": UNSPLASH("photo-1578749556568-bc2c40e68b61"),
+  "talavera-poblana-set": UNSPLASH("photo-1578749556568-bc2c40e68b61"),
 };
 
 /**
- * Imagen temática del producto. Usa LoremFlickr, que devuelve una foto real
- * según palabras clave; el parámetro `lock` fija una imagen concreta por
- * producto (estable y distinta para cada uno).
+ * Imagen del producto: usa la foto específica si existe; si no, rota entre
+ * las fotos de su categoría según el índice. Todas son URLs estables de
+ * Unsplash que cargan de forma fiable.
  */
 function imagenProducto(slug: string, categoria: string, idx: number): string {
-  const keywords =
-    KEYWORDS_PRODUCTO[slug] ?? KEYWORDS_CATEGORIA[categoria] ?? "mexican,craft";
-  // lock determinista a partir del índice para que cada producto tenga su foto.
-  const lock = 1000 + idx;
-  return `https://loremflickr.com/800/800/${keywords}?lock=${lock}`;
+  if (IMAGEN_PRODUCTO[slug]) return IMAGEN_PRODUCTO[slug];
+  const pool = IMAGENES_CATEGORIA[categoria] ?? IMAGENES_CATEGORIA.artesanias;
+  return pool[idx % pool.length];
 }
 
 interface Entrada {
