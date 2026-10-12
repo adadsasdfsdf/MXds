@@ -44,7 +44,6 @@ export default function Footer() {
           <h3 className="mb-3 font-semibold text-gray-900">Métodos de pago</h3>
           <ul className="space-y-2 text-sm text-gray-600">
             <li>💳 Tarjeta de crédito/débito</li>
-            <li>🏪 Pago en efectivo (OXXO)</li>
             <li>🏦 Transferencia SPEI</li>
             <li>💙 Mercado Pago</li>
           </ul>

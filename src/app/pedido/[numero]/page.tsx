@@ -13,7 +13,6 @@ const ETIQUETA_PAGO: Record<string, string> = {
 
 const ETIQUETA_METODO: Record<string, string> = {
   tarjeta: "Tarjeta de crédito/débito",
-  oxxo: "Pago en efectivo (OXXO)",
   spei: "Transferencia SPEI",
   mercadopago: "Mercado Pago",
 };
@@ -43,25 +42,6 @@ export default async function PedidoPage({
       </div>
 
       {/* Instrucciones de pago según método */}
-      {p.estadoPago === "pendiente" && p.metodoPago === "oxxo" && (
-        <div className="mt-8 rounded-xl border-2 border-amber-300 bg-amber-50 p-6">
-          <h2 className="font-bold text-gray-900">🏪 Paga en OXXO</h2>
-          <p className="mt-1 text-sm text-gray-600">
-            Acude a cualquier tienda OXXO y proporciona esta referencia. Tu
-            pedido se procesará al confirmarse el pago.
-          </p>
-          <div className="mt-4 rounded-lg bg-white p-4 text-center">
-            <p className="text-xs text-gray-500">Referencia de pago</p>
-            <p className="font-mono text-xl font-bold tracking-wider text-gray-900">
-              {p.referenciaPago}
-            </p>
-          </div>
-          <p className="mt-3 text-center text-lg font-bold text-mexico-green">
-            Total a pagar: {formatMXN(p.totalCentavos / 100)}
-          </p>
-        </div>
-      )}
-
       {p.estadoPago === "pendiente" && p.metodoPago === "spei" && (
         <div className="mt-8 rounded-xl border-2 border-blue-300 bg-blue-50 p-6">
           <h2 className="font-bold text-gray-900">🏦 Transferencia SPEI</h2>

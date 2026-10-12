@@ -7,6 +7,7 @@ import { useCarrito } from "@/context/CarritoContext";
 import { useAuth } from "@/context/AuthContext";
 import { CATEGORIAS } from "@/lib/data";
 import { Logo } from "@/components/Logo";
+import BuscadorHeader from "@/components/BuscadorHeader";
 
 export default function Header() {
   const { totalItems } = useCarrito();
@@ -26,27 +27,17 @@ export default function Header() {
       {/* Barra superior con mensaje de envío */}
       <div className="bg-mexico-green text-center text-sm text-white">
         <p className="py-1.5">
-          🌵 Lo lindo de México, en tu puerta · Envío gratis desde $999 MXN ·
-          Pago en OXXO
+          🎉 ¡Nueva tienda! 15% de descuento en todo · Envío gratis desde $999
+          MXN
         </p>
       </div>
 
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4">
-        <Link href="/">
+      <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-4">
+        <Link href="/" className="flex-shrink-0">
           <Logo />
         </Link>
 
-        <nav className="hidden items-center gap-6 md:flex">
-          {CATEGORIAS.map((c) => (
-            <Link
-              key={c.id}
-              href={`/categoria/${c.id}`}
-              className="text-sm font-medium text-gray-700 transition-colors hover:text-mexico-green"
-            >
-              {c.nombre}
-            </Link>
-          ))}
-        </nav>
+        <BuscadorHeader />
 
         <div className="flex items-center gap-3">
           {/* Cuenta de usuario */}
@@ -138,6 +129,22 @@ export default function Header() {
           </Link>
         </div>
       </div>
+
+      {/* Navegación de categorías (segunda fila, con scroll horizontal) */}
+      <nav className="border-t border-gray-100 bg-white">
+        <div className="mx-auto flex max-w-7xl items-center gap-5 overflow-x-auto px-4 py-2.5 text-sm">
+          {CATEGORIAS.map((c) => (
+            <Link
+              key={c.id}
+              href={`/categoria/${c.id}`}
+              className="flex-shrink-0 whitespace-nowrap font-medium text-gray-600 transition-colors hover:text-mexico-green"
+            >
+              <span className="mr-1">{c.emoji}</span>
+              {c.nombre}
+            </Link>
+          ))}
+        </div>
+      </nav>
     </header>
   );
 }

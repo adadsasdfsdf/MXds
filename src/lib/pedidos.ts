@@ -13,7 +13,7 @@ export const checkoutSchema = z.object({
   codigoPostal: z.string().regex(/^\d{5}$/, "Código postal inválido"),
   ciudad: z.string().min(2),
   estado: z.string().min(2),
-  metodoPago: z.enum(["tarjeta", "oxxo", "spei", "mercadopago"]),
+  metodoPago: z.enum(["tarjeta", "spei", "mercadopago"]),
   requiereFactura: z.boolean().optional().default(false),
   rfc: z.string().optional(),
   razonSocial: z.string().optional(),

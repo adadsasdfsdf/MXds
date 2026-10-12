@@ -346,11 +346,7 @@ export default function CheckoutPage() {
             disabled={cpInvalido || procesando}
             className="mt-6 block w-full rounded-lg bg-mexico-green py-3 text-center font-semibold text-white transition-colors hover:bg-mexico-green/90 disabled:cursor-not-allowed disabled:bg-gray-300"
           >
-            {procesando
-              ? "Procesando..."
-              : metodoPago === "oxxo"
-                ? "Generar ficha OXXO"
-                : "Pagar ahora"}
+            {procesando ? "Procesando..." : "Pagar ahora"}
           </button>
           <p className="mt-3 text-center text-xs text-gray-400">
             🔒 Pago seguro procesado con Mercado Pago

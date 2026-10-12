@@ -1,16 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import type { Producto } from "@/lib/types";
 import { formatMXN, ivaIncluido } from "@/lib/mexico";
 import { useCarrito } from "@/context/CarritoContext";
 
+const IMG_FALLBACK =
+  "https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=800&q=80";
+
 export default function DetalleProducto({ producto }: { producto: Producto }) {
   const { agregar } = useCarrito();
   const [cantidad, setCantidad] = useState(1);
   const [agregado, setAgregado] = useState(false);
+  const [imgSrc, setImgSrc] = useState(producto.imagen);
 
   const handleAgregar = () => {
     agregar(producto, cantidad);
@@ -36,13 +39,12 @@ export default function DetalleProducto({ producto }: { producto: Producto }) {
 
       <div className="grid gap-8 md:grid-cols-2">
         <div className="relative aspect-square overflow-hidden rounded-xl bg-gray-100">
-          <Image
-            src={producto.imagen}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={imgSrc}
             alt={producto.nombre}
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-cover"
-            priority
+            onError={() => setImgSrc(IMG_FALLBACK)}
+            className="h-full w-full object-cover"
           />
         </div>
 
@@ -114,7 +116,7 @@ export default function DetalleProducto({ producto }: { producto: Producto }) {
 
           <div className="mt-8 space-y-2 rounded-lg bg-mexico-sand p-4 text-sm text-gray-700">
             <p>🚚 Envío gratis en compras mayores a $999 MXN</p>
-            <p>🏪 Paga con tarjeta, OXXO, SPEI o Mercado Pago</p>
+            <p>💳 Paga con tarjeta, SPEI o Mercado Pago</p>
             <p>🧾 Facturación CFDI disponible</p>
           </div>
         </div>

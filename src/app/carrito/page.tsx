@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useCarrito } from "@/context/CarritoContext";
 import { formatMXN, FREE_SHIPPING_THRESHOLD } from "@/lib/mexico";
@@ -52,13 +51,12 @@ export default function CarritoPage() {
                 key={producto.id}
                 className="flex gap-4 rounded-xl border border-gray-200 bg-white p-4"
               >
-                <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
-                  <Image
+                <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={producto.imagen}
                     alt={producto.nombre}
-                    fill
-                    sizes="96px"
-                    className="object-cover"
+                    className="h-full w-full object-cover"
                   />
                 </div>
 
