@@ -1,10 +1,8 @@
-import type { CategoriaInfo, Producto } from "./types";
+import type { Categoria, CategoriaInfo, Producto } from "./types";
+import { prisma } from "./prisma";
+import type { Producto as ProductoDB } from "@prisma/client";
 
-/**
- * Datos de ejemplo del catálogo. En producción esto vendría de una base de
- * datos (PostgreSQL, etc.) o de un CMS/headless commerce (Medusa, Shopify).
- */
-
+/** Metadatos de las categorías (estáticos). */
 export const CATEGORIAS: CategoriaInfo[] = [
   {
     id: "artesanias",
@@ -38,130 +36,58 @@ export const CATEGORIAS: CategoriaInfo[] = [
   },
 ];
 
-export const PRODUCTOS: Producto[] = [
-  {
-    id: "1",
-    slug: "alebrije-oaxaqueno",
-    nombre: "Alebrije Oaxaqueño",
-    descripcion:
-      "Figura de madera tallada y pintada a mano por artesanos de Oaxaca. Cada pieza es única.",
-    precio: 1299.0,
-    precioAnterior: 1599.0,
-    categoria: "artesanias",
-    imagen:
-      "https://images.unsplash.com/photo-1596463059283-da257325bab8?w=800&q=80",
-    stock: 12,
-    origen: "Oaxaca",
-    destacado: true,
-  },
-  {
-    id: "2",
-    slug: "huipil-bordado",
-    nombre: "Huipil Bordado a Mano",
-    descripcion:
-      "Blusa tradicional con bordados florales multicolor, técnica heredada por generaciones.",
-    precio: 890.0,
-    categoria: "ropa",
-    imagen:
-      "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&q=80",
-    stock: 8,
-    origen: "Chiapas",
-    destacado: true,
-  },
-  {
-    id: "3",
-    slug: "salsa-macha-artesanal",
-    nombre: "Salsa Macha Artesanal (250g)",
-    descripcion:
-      "Salsa macha con chile de árbol, cacahuate y ajonjolí. Picor medio, sabor intenso.",
-    precio: 149.0,
-    categoria: "alimentos",
-    imagen:
-      "https://images.unsplash.com/photo-1613514785940-daed07799d9b?w=800&q=80",
-    stock: 50,
-    origen: "Veracruz",
-    destacado: true,
-  },
-  {
-    id: "4",
-    slug: "talavera-poblana-set",
-    nombre: "Set de Talavera Poblana",
-    descripcion:
-      "Juego de 4 tazas de cerámica Talavera auténtica de Puebla, pintadas a mano.",
-    precio: 749.0,
-    categoria: "hogar",
-    imagen:
-      "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=800&q=80",
-    stock: 20,
-    origen: "Puebla",
-  },
-  {
-    id: "5",
-    slug: "jabon-de-nopal",
-    nombre: "Jabón Artesanal de Nopal",
-    descripcion:
-      "Jabón natural de nopal y aloe vera, ideal para pieles sensibles. Sin parabenos.",
-    precio: 79.0,
-    categoria: "belleza",
-    imagen:
-      "https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=800&q=80",
-    stock: 100,
-    origen: "Jalisco",
-  },
-  {
-    id: "6",
-    slug: "sarape-saltillo",
-    nombre: "Sarape de Saltillo",
-    descripcion:
-      "Sarape tejido en telar con los colores vibrantes característicos de Saltillo.",
-    precio: 1150.0,
-    categoria: "ropa",
-    imagen:
-      "https://images.unsplash.com/photo-1544441893-675973e31985?w=800&q=80",
-    stock: 15,
-    origen: "Coahuila",
-  },
-  {
-    id: "7",
-    slug: "cafe-chiapas-500g",
-    nombre: "Café de Chiapas en Grano (500g)",
-    descripcion:
-      "Café de altura orgánico, tostado medio, notas de chocolate y frutos rojos.",
-    precio: 219.0,
-    precioAnterior: 259.0,
-    categoria: "alimentos",
-    imagen:
-      "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=800&q=80",
-    stock: 40,
-    origen: "Chiapas",
-    destacado: true,
-  },
-  {
-    id: "8",
-    slug: "canasta-tejida",
-    nombre: "Canasta Tejida de Palma",
-    descripcion:
-      "Canasta multiusos tejida a mano con palma natural. Resistente y ecológica.",
-    precio: 329.0,
-    categoria: "hogar",
-    imagen:
-      "https://images.unsplash.com/photo-1595408076683-5d0c643e4f78?w=800&q=80",
-    stock: 25,
-    origen: "Guerrero",
-  },
-];
+/** Convierte un producto de la base de datos (centavos) al tipo de dominio (pesos). */
+export function mapProducto(p: ProductoDB): Producto {
+  return {
+    id: p.id,
+    slug: p.slug,
+    nombre: p.nombre,
+    descripcion: p.descripcion,
+    precio: p.precioCentavos / 100,
+    precioAnterior: p.precioAnteriorCentavos
+      ? p.precioAnteriorCentavos / 100
+      : undefined,
+    categoria: p.categoria as Categoria,
+    imagen: p.imagen,
+    stock: p.stock,
+    origen: p.origen ?? undefined,
+    destacado: p.destacado,
+  };
+}
+
+/** Devuelve todos los productos activos. */
+export async function getProductos(): Promise<Producto[]> {
+  const productos = await prisma.producto.findMany({
+    where: { activo: true },
+    orderBy: { creadoEn: "desc" },
+  });
+  return productos.map(mapProducto);
+}
 
 /** Busca un producto por su slug. */
-export function getProductoPorSlug(slug: string): Producto | undefined {
-  return PRODUCTOS.find((p) => p.slug === slug);
+export async function getProductoPorSlug(
+  slug: string,
+): Promise<Producto | undefined> {
+  const p = await prisma.producto.findUnique({ where: { slug } });
+  return p && p.activo ? mapProducto(p) : undefined;
 }
 
 /** Devuelve los productos de una categoría. */
-export function getProductosPorCategoria(categoria: string): Producto[] {
-  return PRODUCTOS.filter((p) => p.categoria === categoria);
+export async function getProductosPorCategoria(
+  categoria: string,
+): Promise<Producto[]> {
+  const productos = await prisma.producto.findMany({
+    where: { categoria, activo: true },
+    orderBy: { creadoEn: "desc" },
+  });
+  return productos.map(mapProducto);
 }
 
 /** Devuelve los productos destacados para la página de inicio. */
-export function getProductosDestacados(): Producto[] {
-  return PRODUCTOS.filter((p) => p.destacado);
+export async function getProductosDestacados(): Promise<Producto[]> {
+  const productos = await prisma.producto.findMany({
+    where: { destacado: true, activo: true },
+    take: 8,
+  });
+  return productos.map(mapProducto);
 }

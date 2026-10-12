@@ -1,13 +1,15 @@
 import { notFound } from "next/navigation";
-import { PRODUCTOS, getProductoPorSlug } from "@/lib/data";
+import { getProductoPorSlug } from "@/lib/data";
 import DetalleProducto from "./DetalleProducto";
 
-export function generateStaticParams() {
-  return PRODUCTOS.map((p) => ({ slug: p.slug }));
-}
+export const dynamic = "force-dynamic";
 
-export default function ProductoPage({ params }: { params: { slug: string } }) {
-  const producto = getProductoPorSlug(params.slug);
+export default async function ProductoPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const producto = await getProductoPorSlug(params.slug);
   if (!producto) {
     notFound();
   }
