@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ProductoCard from "@/components/ProductoCard";
+import CategoriaIcono from "@/components/CategoriaIcono";
 import { CATEGORIAS, getProductosDestacados } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
@@ -89,8 +90,8 @@ export default async function HomePage() {
               href={`/categoria/${c.id}`}
               className="group flex flex-col items-center rounded-2xl border border-gray-200 bg-white p-5 text-center transition-all hover:-translate-y-1 hover:border-mexico-green hover:shadow-lg"
             >
-              <span className="text-4xl transition-transform group-hover:scale-110">
-                {c.emoji}
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-mexico-green/10 text-mexico-green transition-colors group-hover:bg-mexico-green group-hover:text-white">
+                <CategoriaIcono categoria={c.id} className="h-7 w-7" />
               </span>
               <span className="mt-2 text-sm font-semibold text-gray-900">
                 {c.nombre}

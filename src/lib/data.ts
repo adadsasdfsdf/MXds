@@ -156,3 +156,53 @@ export async function buscarProductos(query: string): Promise<Producto[]> {
   });
   return productos.map(mapProducto);
 }
+
+export interface ResumenResenas {
+  promedio: number;
+  total: number;
+  resenas: {
+    id: string;
+    autor: string;
+    calificacion: number;
+    comentario: string;
+    verificada: boolean;
+    creadoEn: Date;
+  }[];
+}
+
+/** Obtiene las reseñas de un producto con su promedio y total. */
+export async function getResenas(productoId: string): Promise<ResumenResenas> {
+  const resenas = await prisma.resena.findMany({
+    where: { productoId },
+    orderBy: { creadoEn: "desc" },
+  });
+  const total = resenas.length;
+  const promedio =
+    total > 0
+      ? resenas.reduce(
+          (acc: number, r: { calificacion: number }) => acc + r.calificacion,
+          0,
+        ) / total
+      : 0;
+  return {
+    promedio: Math.round(promedio * 10) / 10,
+    total,
+    resenas: resenas.map(
+      (r: {
+        id: string;
+        autor: string;
+        calificacion: number;
+        comentario: string;
+        verificada: boolean;
+        creadoEn: Date;
+      }) => ({
+        id: r.id,
+        autor: r.autor,
+        calificacion: r.calificacion,
+        comentario: r.comentario,
+        verificada: r.verificada,
+        creadoEn: r.creadoEn,
+      }),
+    ),
+  };
+}
