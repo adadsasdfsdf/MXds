@@ -4,8 +4,6 @@ import CategoriaIcono from "@/components/CategoriaIcono";
 import HeroCarrusel from "@/components/HeroCarrusel";
 import { CATEGORIAS, getProductosDestacados } from "@/lib/data";
 
-export const dynamic = "force-dynamic";
-
 export default async function HomePage() {
   const destacados = await getProductosDestacados();
 

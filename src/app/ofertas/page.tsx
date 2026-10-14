@@ -2,8 +2,6 @@ import Link from "next/link";
 import ProductoCard from "@/components/ProductoCard";
 import { getProductos } from "@/lib/data";
 
-export const dynamic = "force-dynamic";
-
 export const metadata = {
   title: "Ofertas de lanzamiento · 15% en toda la tienda",
   description:

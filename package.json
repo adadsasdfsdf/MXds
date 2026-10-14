@@ -5,8 +5,9 @@
   "description": "Tienda en línea para el mercado mexicano (Next.js + TypeScript + Tailwind + Prisma)",
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && prisma db push --accept-data-loss && next build",
+    "build": "prisma generate && prisma db push --accept-data-loss && npm run db:seed && next build",
     "start": "next start",
+    "serve:static": "npx serve out",
     "vercel-build": "prisma generate && prisma db push --accept-data-loss && next build",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
