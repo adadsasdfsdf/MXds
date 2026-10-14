@@ -5,10 +5,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// NOTA: Para la exportación estática usamos SQLite local (archivo dev.db),
+// de modo que el build no necesita una base de datos externa.
+// Para producción dinámica, vuelve a "postgresql" y usa DATABASE_URL/DIRECT_URL.
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model Usuario {

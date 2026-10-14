@@ -3,7 +3,10 @@ import ProductoCard from "@/components/ProductoCard";
 import CategoriaIcono from "@/components/CategoriaIcono";
 import { CATEGORIAS, getProductosPorCategoria } from "@/lib/data";
 
-export const dynamic = "force-dynamic";
+// Pre-genera una página .html por cada categoría en el build estático.
+export async function generateStaticParams() {
+  return CATEGORIAS.map((c) => ({ categoria: c.id }));
+}
 
 export default async function CategoriaPage({
   params,

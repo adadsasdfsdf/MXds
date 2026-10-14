@@ -1,9 +1,13 @@
 import { notFound } from "next/navigation";
-import { getProductoPorSlug, getResenas } from "@/lib/data";
+import { getProductoPorSlug, getProductos, getResenas } from "@/lib/data";
 import DetalleProducto from "./DetalleProducto";
 import Resenas from "@/components/Resenas";
 
-export const dynamic = "force-dynamic";
+// Pre-genera una página .html por cada producto en el build estático.
+export async function generateStaticParams() {
+  const productos = await getProductos();
+  return productos.map((p) => ({ slug: p.slug }));
+}
 
 export default async function ProductoPage({
   params,
